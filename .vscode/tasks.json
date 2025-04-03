@@ -1,0 +1,73 @@
+{
+    "tasks": [
+        {
+            "label": "GCC Build",
+            "type": "cppbuild",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.out",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-std=c17"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "focus": false,
+                "panel": "shared",
+                "clear": false,
+                "showReuseMessage": false
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "GCC Run",
+            "type": "shell",
+            "command": "${fileDirname}/${fileBasenameNoExtension}.out",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "focus": true,
+                "panel": "shared",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "GCC Build and Run",
+            "type": "shell",
+            "command": "${fileDirname}/${fileBasenameNoExtension}.out",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "focus": true,
+                "panel": "shared",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "dependsOn": "GCC Build",
+            "problemMatcher": [],
+            "group": "build"
+        },
+    ],
+    "version": "2.0.0"
+}

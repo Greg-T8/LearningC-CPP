@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "LLDB: Debug",
+            "type": "lldb",
+            "request": "launch",
+            "stopOnEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "neverOpen",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "preLaunchTask": "GCC Build"
+        },
+        {
+            "name": "GDB: Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "cwd": "${fileDirname}",
+            "externalConsole": false,
+            "internalConsoleOptions": "neverOpen",
+            "showDisplayString": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "GCC Build",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set disassembly flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+    ]
+}

@@ -1,0 +1,8 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterFunction: true
+    AfterControlStatement: Always
