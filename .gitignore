@@ -1,3 +1,8 @@
+# Exclude binary files with no extension (common in C projects)
+*
+!/**/
+!*.*
+
 # Prerequisites
 *.d
 
@@ -40,10 +45,6 @@
 **/bin/*
 **/build/*
 
-# Exclude binary files with no extension (common in C projects)
-*
-!/**/
-!*.*
 
 # Debug files
 *.dSYM/
