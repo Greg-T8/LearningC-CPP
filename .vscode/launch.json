@@ -2,16 +2,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "LLDB: Debug",
-            "type": "lldb",
-            "request": "launch",
-            "stopOnEntry": false,
-            "console": "internalConsole",
-            "internalConsoleOptions": "neverOpen",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "preLaunchTask": "GCC Build"
-        },
-        {
             "name": "GDB: Debug",
             "type": "cppdbg",
             "request": "launch",
@@ -35,6 +25,16 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "LLDB: Debug",
+            "type": "lldb",
+            "request": "launch",
+            "stopOnEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "neverOpen",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "preLaunchTask": "GCC Build"
         },
     ]
 }
