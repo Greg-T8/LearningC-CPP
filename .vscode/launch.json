@@ -13,6 +13,7 @@
             "MIMode": "gdb",
             "preLaunchTask": "GCC Build",
             "miDebuggerPath": "/usr/bin/gdb",
+            "stopAtEntry": false,
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -25,16 +26,6 @@
                     "ignoreFailures": true
                 }
             ]
-        },
-        {
-            "name": "LLDB: Debug",
-            "type": "lldb",
-            "request": "launch",
-            "stopOnEntry": false,
-            "console": "internalConsole",
-            "internalConsoleOptions": "neverOpen",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "preLaunchTask": "GCC Build"
-        },
+        }
     ]
 }

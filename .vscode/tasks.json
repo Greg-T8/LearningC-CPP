@@ -9,7 +9,7 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}.out",
+                "${fileDirname}/${fileBasenameNoExtension}",
                 "-Wall",
                 "-Wextra",
                 "-Wpedantic",
@@ -33,12 +33,12 @@
             "group": {
                 "kind": "build",
                 "isDefault": false
-            }
+            },
         },
         {
             "label": "GCC Run",
             "type": "shell",
-            "command": "${fileDirname}/${fileBasenameNoExtension}.out",
+            "command": "${fileDirname}/${fileBasenameNoExtension}",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -54,7 +54,7 @@
         {
             "label": "GCC Build and Run",
             "type": "shell",
-            "command": "${fileDirname}/${fileBasenameNoExtension}.out",
+            "command": "${fileDirname}/${fileBasenameNoExtension}",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -67,7 +67,7 @@
             "dependsOn": "GCC Build",
             "problemMatcher": [],
             "group": "build"
-        },
+        }
     ],
     "version": "2.0.0"
 }
