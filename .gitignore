@@ -36,6 +36,14 @@
 *.x86_64
 *.hex
 
+# Exclude binaries without extension
+**/bin/*
+**/build/*
+# Exclude binary files with no extension (common in C projects)
+*
+!/**/
+!*.*
+
 # Debug files
 *.dSYM/
 *.su
