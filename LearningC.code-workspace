@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+    ],
+    "settings": {},
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.cpptools", // C/C++ (Microsoft)
+            "ms-vscode.cpptools-extension-pack", // C/C++ Extension Pack (Microsoft)
+            "ms-vscode.cpptools-themes", // C/C++ Themes (Microsoft)
+            "esbenp.prettier-vscode", // Prettier - Code formatter
+            "yzhang.markdown-all-in-one" // Markdown All in One
+        ]
+    },
+}
