@@ -10,6 +10,10 @@ main()
     upper = 300; // upper limit of temperature
     step = 20;   // step size
     fahr = lower;
+
+    // print header
+    printf("Fahrenheit to Celsius Conversion Table\n");
+
     while (fahr <= upper)
     {
         celsius = (5.0 / 9.0) * (fahr - 32); // convert Fahrenheit to Celsius
