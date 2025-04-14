@@ -14,13 +14,13 @@
  */
 
 int main () {
-    printf("%-20s %15s %15s\n", "Type", "Min Value", "Max Value");
-    printf("%-20s %15d %15d\n", "char (signed)", SCHAR_MIN, SCHAR_MAX);
-    printf("%-20s %15d %15u\n", "char (unsigned)", 0, UCHAR_MAX);
-    printf("%-20s %15d %15d\n", "short (signed)", SHRT_MIN, SHRT_MAX);
-    printf("%-20s %15d %15d\n", "short (unsigned)", 0, SHRT_MAX);
-    printf("%-20s %15d %15d\n", "int (signed)", INT_MIN, INT_MAX);
-    printf("%-20s %15d %15u\n", "int (unsigned)", 0, UINT_MAX);
-    printf("%-20s %15d %15d\n", "long (signed)", LONG_MIN, LONG_MAX);
-    printf("%-20s %15d %15u\n", "long (unsigned)", 0, ULONG_MAX);
+    printf("%-20s %25s %25s\n", "Type", "Min Value", "Max Value");
+    printf("%-20s %25d %25d\n", "char (signed)", SCHAR_MIN, SCHAR_MAX);
+    printf("%-20s %25d %25u\n", "char (unsigned)", 0, UCHAR_MAX);
+    printf("%-20s %25d %25d\n", "short (signed)", SHRT_MIN, SHRT_MAX);
+    printf("%-20s %25d %25d\n", "short (unsigned)", 0, SHRT_MAX);
+    printf("%-20s %25d %25d\n", "int (signed)", INT_MIN, INT_MAX);
+    printf("%-20s %25d %25u\n", "int (unsigned)", 0, UINT_MAX);
+    printf("%-20s %25ld %25ld\n", "long (signed)", LONG_MIN, LONG_MAX);
+    printf("%-20s %25d %25lu\n", "long (unsigned)", 0, ULONG_MAX);
 }
