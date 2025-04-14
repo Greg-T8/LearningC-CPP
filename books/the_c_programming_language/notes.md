@@ -24,4 +24,7 @@ long int counter;
 Each compiler is free to choose its appropriate sizes for these types. `short` is often 16 bits, `int` is almost universally 32 bits, and `long` is at least 32 bits.
 
 <blockquote>
-<strong>Note:</strong> 
+<strong>Note:</strong> On most systems, a Windows `long` is 32 bits and a Linux/macOS `long` is 64 bits.
+</blockquote>
+
+
