@@ -2,7 +2,7 @@
  * Program: Conversion and Truncation of Types
  * Context: Chapter 2, "The C++ Programming Language" by Bjarne Stroustrup
  * Author: Greg Tate
- * Date: 2023-10-07
+ * Date: April 14, 2025
  *
  * Synopsis:
  * This program demonstrates type conversion in C++ by adding a double and an int,

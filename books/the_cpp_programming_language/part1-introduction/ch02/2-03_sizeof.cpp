@@ -2,7 +2,7 @@
  * Program: Sizeof Fundamental Types
  * Context: Chapter 2, "The C++ Programming Language" by Bjarne Stroustrup
  * Author: Greg Tate
- * Date: 2023-10-07
+ * Date: April 14, 2025
  *
  * Synopsis:
  * This program demonstrates the use of the `sizeof` operator to display

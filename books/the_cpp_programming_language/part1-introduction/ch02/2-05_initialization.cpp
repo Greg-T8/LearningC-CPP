@@ -2,7 +2,7 @@
  * Program: Variable Initialization
  * Context: Chapter 2, "The C++ Programming Language" by Bjarne Stroustrup
  * Author: Greg Tate
- * Date: 2023-10-07
+ * Date: April 14, 2025
  *
  * Synopsis:
  * This program demonstrates different ways to initialize variables in C++,
