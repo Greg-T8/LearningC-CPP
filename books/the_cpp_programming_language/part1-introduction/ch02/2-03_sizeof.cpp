@@ -1,3 +1,14 @@
+/*
+ * Program: Sizeof Fundamental Types
+ * Context: Chapter 2, "The C++ Programming Language" by Bjarne Stroustrup
+ * Author: Greg Tate
+ * Date: 2023-10-07
+ *
+ * Synopsis:
+ * This program demonstrates the use of the `sizeof` operator to display
+ * the sizes of fundamental C++ types such as bool, char, int, float, and double.
+ */
+
 #include <iostream>
 
 int main() {
