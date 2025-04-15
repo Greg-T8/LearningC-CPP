@@ -33,7 +33,7 @@
             "group": {
                 "kind": "build",
                 "isDefault": false
-            },
+            }
         },
         {
             "label": "GCC Run",
@@ -65,6 +65,74 @@
                 "showReuseMessage": false
             },
             "dependsOn": "GCC Build",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "G++ Build",
+            "type": "cppbuild",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-std=c++17"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "focus": false,
+                "panel": "shared",
+                "clear": false,
+                "showReuseMessage": false
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "G++ Run",
+            "type": "shell",
+            "command": "${fileDirname}/${fileBasenameNoExtension}",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "focus": true,
+                "panel": "shared",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "G++ Build and Run",
+            "type": "shell",
+            "command": "${fileDirname}/${fileBasenameNoExtension}",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "focus": true,
+                "panel": "shared",
+                "clear": true,
+                "showReuseMessage": false
+            },
+            "dependsOn": "G++ Build",
             "problemMatcher": [],
             "group": "build"
         }
