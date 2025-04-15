@@ -45,6 +45,8 @@
 **/bin/*
 **/build/*
 
+# Include Makefile
+!Makefile
 
 # Debug files
 *.dSYM/
