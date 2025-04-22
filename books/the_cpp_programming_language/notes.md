@@ -5,7 +5,7 @@
 ## Resources
 - [Book Resources](https://www.stroustrup.com/4th.html)
 
-## The Basics
+## The Basics  
 
 A *declaration* is a statement that introduces a name into a program. It specifies a type for the named entity:
 - A *type* defines a set of possible values and a set of operations (for an object)
