@@ -27,4 +27,29 @@ Each compiler is free to choose its appropriate sizes for these types. `short` i
 <strong>Note:</strong> A Windows `long` is 32 bits and a Linux/macOS `long` is 64 bits.
 </blockquote>
 
+### Character Input and Output
+
+- A *text stream* is a sequence of characters divided into lines; each line consists of zero or more characters followed by a newline.
+- `getchar()` and `putchar()` are the simplest library functions for reading and writing characters.
+- `getchar()` reads the next character from the input stream and returns it as an `int`. It returns `EOF` when the end of the file is reached.
+- `putchar()` writes a character (converted to an unsigned char) to the output stream and returns it as an `int`. It returns `EOF` if an error occurs.
+
+In the following program, `c` is declared as an `int` so that it can accommodate the value of `EOF`, which is typically defined as -1. If `c` were declared as a `char`, it would not be able to hold the value of `EOF`, and the program would not work correctly.
+
+```c
+#include <stdio.h>
+
+int main() {
+    int c;                        // Variable to store each character read from input
+
+    c = getchar();                // Read the first character from input
+    while (c != EOF) {            // Loop until End Of File (EOF) is encountered
+        putchar(c);               // Output the character to standard output
+        c = getchar();            // Read the next character from input
+    }
+}
+```
+
+See [`1_char.c`](./ch01/file_copying/1_char.c) for the complete code.
+
 
