@@ -52,4 +52,30 @@ int main() {
 
 See [`1_char.c`](./ch01/file_copying/1_char.c) for the complete code.
 
+Expressions return a value. The expression `c = getchar()` returns the value of `c` after the assignment is made.
+
+The following code demonstrates reading input until EOF and printing the final value of `c`:
+
+```c
+#include <stdio.h>
+
+// Declare main function and variable for input character
+int main() {
+    int c;
+
+    // Read characters from input until EOF is encountered
+    while ((c = getchar()) != EOF) {
+    }
+
+    // Print the value of c after EOF is reached
+    printf("The value of c is: %2d", c);
+}
+```
+Output:  
+<img src="images/1745314287089.png" alt="alt text" width="300px">
+
+See [`1-6e.c`](./ch01/file_copying/1-6e.c) for the complete code.
+
+#### Character Counting
+
 
