@@ -78,7 +78,7 @@
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "-Wall",
+                // "-Wall",
                 "-Wextra",
                 "-Wpedantic",
                 "-std=c++17"
@@ -93,7 +93,7 @@
                 "echo": true,
                 "reveal": "silent",
                 "revealProblems": "onProblem",
-                "focus": false,
+                "focus": true,
                 "panel": "shared",
                 "clear": false,
                 "showReuseMessage": false
