@@ -2,37 +2,145 @@
 
 <img src="images/1743857546096.png" alt="alt text" width="250px">
 
-## Types, Operators, and Expressions
 
-- Don't begin variable names with an underscore; names with underscores are reserved for library routines.
+## 1. A Tutorial Introduction
 
-### Data Types and Sizes
-
-Here are the data types from K&R C:
-- `char`
-- `int`
-- `float`
-- `double`
-
-You can specify qualifiers for some types:
+The Hello, World! example:
 
 ```c
-short int sh;
-long int counter;
+#include <stdio.h>
+
+main()
+{
+    printf("hello, world\n");
+}
 ```
+See [`hello.c`](./ch01/hello_world/hello.c).
 
-Each compiler is free to choose its appropriate sizes for these types. `short` is often 16 bits, `int` is almost universally 32 bits, and `long` is at least 32 bits.
+### 1.2 Variables and Arithmetic Expressions
 
-<blockquote>
-<strong>Note:</strong> A Windows `long` is 32 bits and a Linux/macOS `long` is 64 bits.
-</blockquote>
+Temperature conversion using integer variables:
 
-### Character Input and Output
+```c
+main()
+{
+    int fahr, celsius;
+    int lower, upper, step;
+
+    lower = 0;
+    upper = 300;
+    step = 20;
+    fahr = lower;
+
+    while (fahr <= upper)
+    {
+        celsius = 5 * (fahr - 32) / 9;
+        printf("%3d\t%6d\n", fahr, celsius);
+        fahr = fahr + step;
+    }
+}
+```
+See [`1-temp-integer.c`](./ch01/temperature/1-temp-integer.c).
+
+Things to note:
+- The `main()` function does not have a return type. In C, the default return type is `int`, so it is better to declare it as `int main()`.
+- The `printf()` function is used to print formatted output. The format string specifies how the output should be formatted.
+- The `%d` format specifier is used for integers, and `%f` is used for floating-point numbers.
+- The expression `5 * (fahr - 32) / 9` performs integer division, which may lead to loss of precision. To avoid this, you can use floating-point arithmetic.
+
+Temperature conversion using floating-point variables:
+
+```c
+main()
+{
+    float fahr, celsius;
+    float lower, upper, step;
+
+    lower = 0;
+    upper = 300;
+    step = 20;
+    fahr = lower;
+    printf("Fahrenheit to Celsius Conversion Table\n");
+    while (fahr <= upper)
+    {
+        celsius = (5.0 / 9.0) * (fahr - 32);
+        printf("%3.0f\t%6.1f\n", fahr, celsius);
+        fahr = fahr + step;
+    }
+}
+```
+See [`2-temp-float.c`](./ch01/temperature/2-temp-float.c).
+
+Using the `printf()` function:
+
+| Format | Description                                                        |
+| ------ | ------------------------------------------------------------------ |
+| %d     | print as decimal integer                                           |
+| %6d    | print as decimal integer, at least 6 characters wide               |
+| %f     | print as floating point                                            |
+| %6f    | print as floating point, at least 6 characters wide                |
+| %.2f   | print as floating point, 2 characters after decimal point          |
+| %6.2f  | print as floating point, at least 6 wide and 2 after decimal point |
+
+### 1.3 The `for` Statement
+
+Temperature conversion using the `for` statement:
+
+```c
+int main()
+{
+    int fahr;
+    for (fahr = 0; fahr <= 300; fahr += 20)
+    {
+        printf("%3d %6.1f\n", fahr, (5.0 / 9.0) * (fahr - 32));
+    }
+}
+```
+See [`4-temp-conversion-for.c`](./ch01/temperature/4-temp-conversion-for.c).
+
+Things to note:
+- The choice between `while` and `for` is aribrary, based on which seems clearer.
+- The `for` statement is usually appropriate for loops in which the initialization and increment are single statements and logically related.
+
+### 1.4 Symbolic Constants
+
+Use `#define` to define symbolic constants:
+
+```
+#define <name> <replacement text>
+
+```
+Things to note:
+- The replacement text can be any sequence of characters, including numbers, letters, and punctuation.
+
+Temperature conversion using symbolic constants:
+
+```c
+#include <stdio.h>
+
+#define LOWER 0
+#define UPPER 300
+#define STEP 20
+
+int main()
+{
+    int fahr;
+    for (fahr = LOWER; fahr <= UPPER; fahr += STEP)
+    {
+        printf("%3d %6.1f\n", fahr, (5.0 / 9.0) * (fahr - 32));
+    }
+}
+```
+See [6-temp-using-defines.c](./ch01/temperature/6-temp-using-defines.c).
+
+### 1.5 Character Input and Output
 
 - A *text stream* is a sequence of characters divided into lines; each line consists of zero or more characters followed by a newline.
 - `getchar()` and `putchar()` are the simplest library functions for reading and writing characters.
 - `getchar()` reads the next character from the input stream and returns it as an `int`. It returns `EOF` when the end of the file is reached.
 - `putchar()` writes a character (converted to an unsigned char) to the output stream and returns it as an `int`. It returns `EOF` if an error occurs.
+
+#### 1.5.1 File Copying
 
 In the following program, `c` is declared as an `int` so that it can accommodate the value of `EOF`, which is typically defined as -1. If `c` were declared as a `char`, it would not be able to hold the value of `EOF`, and the program would not work correctly.
 
@@ -76,6 +184,48 @@ Output:
 
 See [`1-6e.c`](./ch01/file_copying/1-6e.c) for the complete code.
 
-#### Character Counting
+#### 1.5.2 Character Counting
+
+The following program counts the number of characters in the input:
+
+```c
+#include <stdio.h>
+
+int main() {
+    long nc = 0;                     // Initialize character count to zero
+    while (getchar() != EOF) {       // Loop until EOF is encountered
+        ++nc;                        // Increment character count
+        printf("%ld\n", nc);         // Print the current character count
+    }
+}
+```
+See [`1_character_count.c`](./ch01/character_counting/1_character_count.c).
 
 
+
+
+
+## 2. Types, Operators, and Expressions
+
+- Don't begin variable names with an underscore; names with underscores are reserved for library routines.
+
+### Data Types and Sizes
+
+Here are the data types from K&R C:
+- `char`
+- `int`
+- `float`
+- `double`
+
+You can specify qualifiers for some types:
+
+```c
+short int sh;
+long int counter;
+```
+
+Each compiler is free to choose its appropriate sizes for these types. `short` is often 16 bits, `int` is almost universally 32 bits, and `long` is at least 32 bits.
+
+<blockquote>
+<strong>Note:</strong> A Windows `long` is 32 bits and a Linux/macOS `long` is 64 bits.
+</blockquote>
