@@ -179,8 +179,12 @@ int main() {
     printf("The value of c is: %2d", c);
 }
 ```
-Output:  
+<details>
+<summary>Ouput</summary>
+
 <img src="images/1745314287089.png" alt="alt text" width="300px">
+
+</details>
 
 See [`1-6e.c`](./ch01/file_copying/1-6e.c) for the complete code.
 
@@ -195,13 +199,63 @@ int main() {
     long nc = 0;                     // Initialize character count to zero
     while (getchar() != EOF) {       // Loop until EOF is encountered
         ++nc;                        // Increment character count
-        printf("%ld\n", nc);         // Print the current character count
+        printf("%ld\n", nc);         // Print the current character count. `ld` is used for long integers.
     }
 }
 ```
 See [`1_character_count.c`](./ch01/character_counting/1_character_count.c).
 
+Things to note:
+- The program accumulates the count in a variable `nc` of type `long` instead of `int` to avoid overflow for large inputs.
+- The conversion specifier `%ld` is used to print long integers.
 
+The following program stores bigger counts using a double (double precision float):
+
+```c
+#include <stdio.h>
+
+int main() {
+    double nc = 0;                   // Initialize character count to zero
+    for (nc = 0; getchar() != EOF; ++nc) {
+        // Increment character count for each input character
+    }
+    printf("%.0f\n", nc);            // Print the total character count without decimals
+}
+```
+See [`2_character_count.c`](./ch01/character_counting/2_character_count.c).
+
+Things to note:
+- The body of this loop is empty because all the work is done in the `for` statement.
+
+#### 1.5.3 Line Counting 
+
+The next program counts input lines.
+
+```c
+int main() {
+    int c, nl;
+    nl = 0;
+    while ((c = getchar()) != EOF)
+        if (c == '\n')
+            ++nl;
+    printf("%d\n", nl);
+}
+```
+See [1_line_count.c](./ch01/line_counting/1_line_count.c).
+
+<details>
+<summary>Ouput</summary>
+
+<img src="images/1746008322765.png" alt="alt text" width="350px">
+
+</details>
+
+Things to note:
+- A character written between single quotes is called a *character constant*.
+- A character constant represents an integervalue equal to the numeric value of the character in the machine's character set.
+- In this example, `'\n'` is the newline character constant, which has a value of 10 in ASCII.
+
+**Exercise 1-8**: Write a program to count blanks, tabs, and newlines.
 
 
 
