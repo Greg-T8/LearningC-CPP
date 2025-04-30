@@ -257,6 +257,43 @@ Things to note:
 
 **Exercise 1-8**: Write a program to count blanks, tabs, and newlines.
 
+<details>
+<summary>My Solution</summary>
+
+```c
+int main() {
+    // Declare variables for character input and counters
+    int character, blanks, tabs, newlines;
+
+    // Initialize counters
+    blanks = tabs = newlines = 0;
+
+    // Process input and count blanks, tabs, and newlines
+    while((character = getchar()) != EOF) {
+        if (character == ' ')
+            blanks++;
+        if (character == '\t')
+            tabs++;
+        if (character == '\n')
+            newlines++;
+    }
+
+    // Output the results
+    printf("Here are the results: \n");
+    printf("Blanks: %d\n", blanks);
+    printf("Tabs: %d\n", tabs);
+    printf("Newlines: %d\n", newlines);
+}
+```
+See [`ex1_8_character_count.c`](./ch01/character_counting/ex1_8_character_count.c).
+
+**Output:**
+
+<img src="images/1746009564114.png" alt="alt text" width="350px">
+
+</details>
+
+
 
 
 ## 2. Types, Operators, and Expressions
