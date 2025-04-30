@@ -293,7 +293,49 @@ See [`ex1_8_character_count.c`](./ch01/character_counting/ex1_8_character_count.
 
 </details>
 
+**Exercise 1-9:** Write a program to copy its input to its output, replacing each string of one or more blanks by a single blank.
 
+<details>
+<summary>My Solution</summary>
+
+```c
+#include <stdio.h>
+
+// Declare main function and variables for character input and blank counting
+int main() {
+    int c;
+    int blanks;
+
+    // Initialize blank counter and process input character by character
+    blanks = 0;
+    while ((c = getchar()) != EOF)
+    {
+        // Check for blank characters and count consecutive blanks
+        if (c == ' ') {
+            blanks++;
+        } else {
+            // Output a single blank if blanks were counted, then output the non-blank character and reset counter
+            if (blanks > 0) {
+                putchar(' ');
+            }
+            putchar(c);
+            blanks = 0;
+        }
+    }
+}
+```
+See [`ex1_9_squeeze_blanks.c`](./ch01/character_counting/ex1_9_squeeze_blanks.c).
+
+**Output:**
+
+<img src="images/1746011214329.png" alt="alt text" width="350px">
+
+</details>
+
+
+**Exercise 1-10:** Write a program to copy its input to its output, replacing each tab by \t, each backspace by \b, and each backslash by \\. This makes tabs and backspaces visible in an unambiguous way.
+
+TODO: Write a solution for this exercise.
 
 
 ## 2. Types, Operators, and Expressions
