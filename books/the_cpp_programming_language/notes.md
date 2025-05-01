@@ -236,7 +236,70 @@ The definition of `count_x` assumesthat `char*` is a C-style string, i.e., the p
 In older code, `0` or `NULL` is typically used instead of `nullptr`. However, using `nullptr`  elminates potential confusion between integers (such as `0` and `NULL`) and pointers (such as `nullptr`).
 
 
-#### 2.3 User-Defined Types
+### 2.3 User-Defined Types
+
+Built-in types are those that are built from the fundamental types (`int`, `char`, `double`, etc.), the `const` modifer, and the declarator operators (`*`, `&`, `[]`, and `()`).
+
+These built-in types are rich but deliberately low level, as they are intended to reflect the capabilities of conventional computer hardware. However, these built-in types don't provide the programmer with high-level facilities to conveniently write advanced applications.
+
+Instead, C++ augments the built-in types and operations with a set of *abstract mechanisms* out of which the programmer can build high-level facilities.
+
+Types built out of the built-in types using C++'s abstract mechanisms are called *user-defined types*. They are referred to as classes and enumerations.
+
+#### 2.3.1 Structures
+
+The first step in building a new type is to organize its elements into a data structure:
+
+```cpp
+struct Vector {
+    int sz;
+    double* elem;
+};
+```
+A variable of type `Vector` can be declared like this:
+```cpp
+Vector v;
+```
+But this is not useful, as `v`'s `elem` pointer doesn't point to anything. To be useful, you must give it some elements to point to:
+```cpp
+void vector_init(Vector& v, int s)
+{
+    v.elem = new double[s]; // allocate an array of doubles
+    v.sz = s;
+}
+```
+
+- `v`'s `elem` member gets a pointer produced by the `new` operator and `v`'s `sz` member gets the number of elements in the array.
+- The `&`in `Vector&` indicates that we pass `v` by non-`const` reference; that way, `vector_init` can modify the vector passed to it.
+
+A simple use of `Vector` looks like this:
+```cpp
+double read_and_sum(int s)
+{
+    Vector v;
+    vector_init(v, s); // allocate s elements for v
+    for (int i=0; i != s; ++i)
+        cin >> v.elem[i]; // read into v.elem[i]
+    double sum = 0;
+    for (int i=0; i != s; ++i)
+        sum += v.elem[i]; // sum the elements
+    return sum;
+}
+```
+
+We use `.` (dot) to access `struct` members through a name (and through a reference) and `->` to access `struct` members through a pointer.
+```cpp
+void f(Vector v, Vector& rv, Vector* pv)
+{
+    int i1 = v.sz;  // accessing a member through a name
+    int i2 = rv.sz; // accessing a member through a reference
+    int i3 = pv->sz; // accessing a member through a pointer
+}
+```
+
+
+
+
 
 
 
