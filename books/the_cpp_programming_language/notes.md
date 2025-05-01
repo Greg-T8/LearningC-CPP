@@ -188,6 +188,61 @@ void print()
 }
 ```
 
+Instead of copying values into `x`, you can refer to each element of `v` directly:
+```cpp
+void increment()
+{
+    int v[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    for (auto& x:v) // x is a reference to each element of v
+        ++x; // increment each element
+    // ...
+}
+```
+In a declaration, `&` means "reference to". A reference is similar to a pointer, except that you don't need to prefix `*` to access the value referred to by the reference. Also, a reference cannot be made to refer to a different object after it has been initialized.
+
+When used in declarations, operators (such as `&`, `*`, and `[]`) are called *declarator operators*:
+
+```cpp
+T a[n];        // T[n]: array of n Ts
+T* p;          // T*: pointer to T
+T& r;          // T&: reference to T
+T f(A);        // T(A): function taking argument of type A returning a result of type T
+```
+
+We try to ensure that a pointer always points to a valid object, so that dereferencing it is valid. When we don't have an object to point to, or if we need to represent "no object available" (e.g. for an end of a list), we give the pointer the value `nullptr` ("the null pointer").
+
+There is only one `nullptr` by all pointer types:
+```cpp
+double* pd = nullptr;
+Link<Record>* lst = nullptr;  // pointer to a Link to a Record
+int x = nullptr;              // error: nullptr is a pointer, not an integer
+```
+
+It is a good idea to check that a pointer argument actually points to something:
+```cpp
+int count_x(char* p, char x)
+{
+    if (p == nullptr) return 0;
+    int count = 0;
+    for (; *p != 0; ++p)
+    if (*p == x) ++ count;
+    return count;
+}
+```
+Note how you can move a pointer to point to the next element in an array by incrementing it, and that you can leave out the initializer in the `for` statement.
+
+The definition of `count_x` assumesthat `char*` is a C-style string, i.e., the pointer points to a sequence of characters terminated by a null character `'\0'`. 
+
+In older code, `0` or `NULL` is typically used instead of `nullptr`. However, using `nullptr`  elminates potential confusion between integers (such as `0` and `NULL`) and pointers (such as `nullptr`).
+
+
+#### 2.3 User-Defined Types
+
+
+
+
+
+
 
         
 
