@@ -9,6 +9,19 @@
 
 </details>
 
+<!-- omit in toc -->
+## Contents
+
+- [2. A Tour of C++ Basics](#2-a-tour-of-c-basics)
+  - [2.2 The Basics](#22-the-basics)
+    - [2.2.2 Types, Variables, and Arithmetic](#222-types-variables-and-arithmetic)
+    - [2.2.3 Constants](#223-constants)
+    - [2.2.4 Tests and Loops](#224-tests-and-loops)
+    - [2.2.5 Pointers, Arrays, and Loops](#225-pointers-arrays-and-loops)
+  - [2.3 User-Defined Types](#23-user-defined-types)
+    - [2.3.1 Structures](#231-structures)
+
+
 ## 2. A Tour of C++ Basics  
 
 ### 2.2 The Basics
