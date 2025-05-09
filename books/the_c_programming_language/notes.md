@@ -2,6 +2,20 @@
 
 <img src="images/1743857546096.png" alt="alt text" width="250px">
 
+<!-- omit in toc -->
+## Contents
+
+- [1. A Tutorial Introduction](#1-a-tutorial-introduction)
+  - [1.2 Variables and Arithmetic Expressions](#12-variables-and-arithmetic-expressions)
+  - [1.3 The `for` Statement](#13-the-for-statement)
+  - [1.4 Symbolic Constants](#14-symbolic-constants)
+  - [1.5 Character Input and Output](#15-character-input-and-output)
+    - [1.5.1 File Copying](#151-file-copying)
+    - [1.5.2 Character Counting](#152-character-counting)
+    - [1.5.3 Line Counting](#153-line-counting)
+- [2. Types, Operators, and Expressions](#2-types-operators-and-expressions)
+  - [Data Types and Sizes](#data-types-and-sizes)
+
 
 ## 1. A Tutorial Introduction
 
@@ -252,7 +266,7 @@ See [1_line_count.c](./ch01/line_counting/1_line_count.c).
 
 Things to note:
 - A character written between single quotes is called a *character constant*.
-- A character constant represents an integervalue equal to the numeric value of the character in the machine's character set.
+- A character constant represents an integer value equal to the numeric value of the character in the machine's character set.
 - In this example, `'\n'` is the newline character constant, which has a value of 10 in ASCII.
 
 **Exercise 1-8**: Write a program to count blanks, tabs, and newlines.
@@ -285,7 +299,7 @@ int main() {
     printf("Newlines: %d\n", newlines);
 }
 ```
-See [`ex1_8_character_count.c`](./ch01/character_counting/ex1_8_character_count.c).
+[`ex1_8_character_count.c`](./ch01/character_counting/ex1_8_character_count.c)
 
 **Output:**
 
@@ -328,14 +342,67 @@ See [`ex1_9_squeeze_blanks.c`](./ch01/character_counting/ex1_9_squeeze_blanks.c)
 
 **Output:**
 
-<img src="images/1746011214329.png" alt="alt text" width="350px">
+<img src="images/1746011214329.png" alt="alt text" width="250px">
 
 </details>
 
 
 **Exercise 1-10:** Write a program to copy its input to its output, replacing each tab by \t, each backspace by \b, and each backslash by \\. This makes tabs and backspaces visible in an unambiguous way.
 
-TODO: Write a solution for this exercise.
+<!-- <details>
+<summary>My Solution</summary> -->
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    int character;
+
+    /* Process input characters until EOF is encountered */
+    while ((character = getchar()) != EOF)
+    {
+        /* Handle tab character */
+        if (character == '\t')
+        {
+            putchar('\\');
+            putchar('t');
+        }
+        /* Handle backspace character */
+        else if (character == '\b')
+        {
+            putchar('\\');
+            putchar('b');
+        }
+        /* Handle backslash character */
+        else if (character == '\\')
+        {
+            putchar('\\');
+            putchar('\\');
+        }
+        /* Output all other characters without modification */
+        else
+        {
+            putchar(character);
+        }
+    }
+}
+```
+[`ex1-10.c`](./ch01/_exercises/ex1-10.c)
+
+**Output:**  
+
+Confirm by echoing a string with tabs and backspaces:  
+
+<img src="images/1746780630889.png" alt="alt text" width="550px">
+
+Then send the string to a text file and pipe it to the program:
+
+<img src="images/1746780948634.png" alt="alt text" width="550px">
+
+**Note:** The program prints backspaces, tabs, and backslashes as `\b`, `\t`, and `\\` respectively. 
+
+</details>
 
 
 ## 2. Types, Operators, and Expressions
