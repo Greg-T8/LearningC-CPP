@@ -1,0 +1,5 @@
+This is the first line of text.
+Counting words can be very useful.
+Each sentence should be on its own line.
+Word count tools help analyze text easily.
+How many words are in this line?

@@ -433,7 +433,57 @@ Then send the string to a text file and pipe it to the program:
 
 #### 1.5.4 Word Counting
 
+The following program is a bare-bones version of the UNIX program `wc` (word count). 
 
+```c
+#include <stdio.h>
+
+#define IN 1  /* inside a word */
+#define OUT 0 /* outside a word */
+
+/* count lines, words, and characters in input */
+
+int main()
+{
+    int c, nl, nw, nc, state;
+
+    state = OUT;
+    nl = nw = nc = 0;
+
+    while ((c = getchar()) != EOF)
+    {
+        ++nc;
+        if (c == '\n')
+        {
+            ++nl;
+        }
+        if (c == ' ' || c == '\n' || c == '\t')
+        {
+            state = OUT;
+        } else if (state == OUT)
+        {
+            state = IN;
+            ++nw;
+        }
+    }
+    printf("%d %d %d\n", nl, nw, nc);
+}
+```
+[`word_count.c`](./ch01/word_counting/word_count.c)
+
+```bash
+echo "This is the first line of text." > lines.txt
+echo "Counting words can be very useful." >> lines.txt
+echo "Each sentence should be on its own line." >> lines.txt
+echo "Word count tools help analyze text easily." >> lines.txt
+echo "How many words are in this line?" >> lines.txt
+
+cat lines.txt | ./word_count
+```
+**Output:** First column is the number of lines, second is the number of words, and third is the number of characters.
+<img src="images/1746782932605.png" alt="alt text" width="550px">
+
+TODO: finish reading this section and do the exercises
 
 
 ## 2. Types, Operators, and Expressions
