@@ -29,7 +29,7 @@ main()
     printf("hello, world\n");
 }
 ```
-See [`hello.c`](./ch01/hello_world/hello.c).
+[`hello.c`](./ch01/hello_world/hello.c)
 
 ### 1.2 Variables and Arithmetic Expressions
 
@@ -54,7 +54,7 @@ main()
     }
 }
 ```
-See [`1-temp-integer.c`](./ch01/temperature/1-temp-integer.c).
+[`1-temp-integer.c`](./ch01/temperature/1-temp-integer.c)
 
 Things to note:
 - The `main()` function does not have a return type. In C, the default return type is `int`, so it is better to declare it as `int main()`.
@@ -83,7 +83,7 @@ main()
     }
 }
 ```
-See [`2-temp-float.c`](./ch01/temperature/2-temp-float.c).
+[`2-temp-float.c`](./ch01/temperature/2-temp-float.c)
 
 Using the `printf()` function:
 
@@ -110,7 +110,7 @@ int main()
     }
 }
 ```
-See [`4-temp-conversion-for.c`](./ch01/temperature/4-temp-conversion-for.c).
+[`4-temp-conversion-for.c`](./ch01/temperature/4-temp-conversion-for.c)
 
 Things to note:
 - The choice between `while` and `for` is aribrary, based on which seems clearer.
@@ -145,7 +145,7 @@ int main()
     }
 }
 ```
-See [6-temp-using-defines.c](./ch01/temperature/6-temp-using-defines.c).
+[6-temp-using-defines.c](./ch01/temperature/6-temp-using-defines.c)
 
 ### 1.5 Character Input and Output
 
@@ -172,7 +172,7 @@ int main() {
 }
 ```
 
-See [`1_char.c`](./ch01/file_copying/1_char.c) for the complete code.
+[`1_char.c`](./ch01/file_copying/1_char.c)
 
 Expressions return a value. The expression `c = getchar()` returns the value of `c` after the assignment is made.
 
@@ -193,14 +193,11 @@ int main() {
     printf("The value of c is: %2d", c);
 }
 ```
-<details>
-<summary>Ouput</summary>
+[`1-6e.c`](./ch01/file_copying/1-6e.c)
 
+**Output:**  
 <img src="images/1745314287089.png" alt="alt text" width="300px">
 
-</details>
-
-See [`1-6e.c`](./ch01/file_copying/1-6e.c) for the complete code.
 
 #### 1.5.2 Character Counting
 
@@ -217,7 +214,7 @@ int main() {
     }
 }
 ```
-See [`1_character_count.c`](./ch01/character_counting/1_character_count.c).
+[`1_character_count.c`](./ch01/character_counting/1_character_count.c)
 
 Things to note:
 - The program accumulates the count in a variable `nc` of type `long` instead of `int` to avoid overflow for large inputs.
@@ -236,9 +233,9 @@ int main() {
     printf("%.0f\n", nc);            // Print the total character count without decimals
 }
 ```
-See [`2_character_count.c`](./ch01/character_counting/2_character_count.c).
+[`2_character_count.c`](./ch01/character_counting/2_character_count.c)
 
-Things to note:
+**Note:**  
 - The body of this loop is empty because all the work is done in the `for` statement.
 
 #### 1.5.3 Line Counting 
@@ -255,16 +252,13 @@ int main() {
     printf("%d\n", nl);
 }
 ```
-See [1_line_count.c](./ch01/line_counting/1_line_count.c).
+[1_line_count.c](./ch01/line_counting/1_line_count.c)
 
-<details>
-<summary>Ouput</summary>
+**Output:**  
 
 <img src="images/1746008322765.png" alt="alt text" width="350px">
 
-</details>
-
-Things to note:
+**Note:**  
 - A character written between single quotes is called a *character constant*.
 - A character constant represents an integer value equal to the numeric value of the character in the machine's character set.
 - In this example, `'\n'` is the newline character constant, which has a value of 10 in ASCII.
@@ -299,7 +293,7 @@ int main() {
     printf("Newlines: %d\n", newlines);
 }
 ```
-[`ex1_8_character_count.c`](./ch01/character_counting/ex1_8_character_count.c)
+[`ex1_8_character_count.c`](./ch01/_exercises/ex1_8_character_count.c)
 
 **Output:**
 
@@ -338,7 +332,7 @@ int main() {
     }
 }
 ```
-See [`ex1_9_squeeze_blanks.c`](./ch01/character_counting/ex1_9_squeeze_blanks.c).
+[`ex1_9_squeeze_blanks.c`](./ch01/_exercises/ex1_9_squeeze_blanks.c)
 
 **Output:**
 
@@ -349,8 +343,8 @@ See [`ex1_9_squeeze_blanks.c`](./ch01/character_counting/ex1_9_squeeze_blanks.c)
 
 **Exercise 1-10:** Write a program to copy its input to its output, replacing each tab by \t, each backspace by \b, and each backslash by \\. This makes tabs and backspaces visible in an unambiguous way.
 
-<!-- <details>
-<summary>My Solution</summary> -->
+<details>
+<summary>My Solution</summary>
 
 ```c
 #include <stdio.h>
