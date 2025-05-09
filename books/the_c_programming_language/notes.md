@@ -5,6 +5,7 @@
 <!-- omit in toc -->
 ## Contents
 
+- [References](#references)
 - [1. A Tutorial Introduction](#1-a-tutorial-introduction)
   - [1.2 Variables and Arithmetic Expressions](#12-variables-and-arithmetic-expressions)
   - [1.3 The `for` Statement](#13-the-for-statement)
@@ -13,10 +14,42 @@
     - [1.5.1 File Copying](#151-file-copying)
     - [1.5.2 Character Counting](#152-character-counting)
     - [1.5.3 Line Counting](#153-line-counting)
+    - [1.5.4 Word Counting](#154-word-counting)
 - [2. Types, Operators, and Expressions](#2-types-operators-and-expressions)
   - [Data Types and Sizes](#data-types-and-sizes)
 
+## References
 
+Character Constants:
+
+| Name            | Abbreviation | Escape Sequence |
+| --------------- | ------------ | --------------- |
+| newline         | NL (LF)      | `\n`            |
+| horizontal tab  | HT           | `\t`            |
+| vertical tab    | VT           | `\v`            |
+| backspace       | BS           | `\b`            |
+| carriage return | CR           | `\r`            |
+| formfeed        | FF           | `\f`            |
+| audible alert   | BEL          | `\a`            |
+| backslash       | \            | `\\`            |
+| question mark   | ?            | `\?`            |
+| single quote    | ’            | `\'`            |
+| double quote    | "            | `\"`            |
+| octal number    | ooo          | `\ooo`          |
+| hex number      | hh           | `\xhh`          |
+
+Format Specifiers for the `printf()` function:
+
+| Format | Description                                                        |
+| ------ | ------------------------------------------------------------------ |
+| %d     | print as decimal integer                                           |
+| %6d    | print as decimal integer, at least 6 characters wide               |
+| %f     | print as floating point                                            |
+| %6f    | print as floating point, at least 6 characters wide                |
+| %.2f   | print as floating point, 2 characters after decimal point          |
+| %6.2f  | print as floating point, at least 6 wide and 2 after decimal point |
+
+ 
 ## 1. A Tutorial Introduction
 
 The Hello, World! example:
@@ -397,6 +430,10 @@ Then send the string to a text file and pipe it to the program:
 **Note:** The program prints backspaces, tabs, and backslashes as `\b`, `\t`, and `\\` respectively. 
 
 </details>
+
+#### 1.5.4 Word Counting
+
+
 
 
 ## 2. Types, Operators, and Expressions
