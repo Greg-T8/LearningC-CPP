@@ -78,7 +78,7 @@
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                // "-Wall",
+                "-Wall",
                 "-Wextra",
                 "-Wpedantic",
                 "-std=c++17"
