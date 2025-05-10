@@ -5,7 +5,7 @@
 <details>
 <summary>Book Resources</summary>
 
-- [Book Resources](https://www.stroustrup.com/4th.html)
+- [Book Website](https://www.stroustrup.com/4th.html)
 
 </details>
 
@@ -309,6 +309,18 @@ void f(Vector v, Vector& rv, Vector* pv)
     int i3 = pv->sz; // accessing a member through a pointer
 }
 ```
+
+This means:
+- `v` is passed by value → a copy of a Vector object is made.
+- `rv` is passed by reference → no copy is made, it refers directly to the original Vector.
+- `pv` is passed by pointer → you receive a pointer to a Vector (you must dereference it to access members).
+
+| Parameter    | Access            | Copy? | Syntax   | Notes                                               |
+| :----------- | :---------------- | :---- | :------- | :-------------------------------------------------- |
+| `Vector v`   | Local copy        | Yes   | `v.sz`   | Changing `v` only changes the copy                  |
+| `Vector& rv` | Original object   | No    | `rv.sz`  | Changes affect the original                         |
+| `Vector* pv` | Pointer to object | No    | `pv->sz` | Changes affect the original (pointer must be valid) |
+
 
 
 
