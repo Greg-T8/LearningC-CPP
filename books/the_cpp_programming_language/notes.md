@@ -395,15 +395,39 @@ int main()
 
 #### 2.3.3 Enumerations
 
+C++ supports a simple form of a user-defined type called an *enumeration*, which is a set of named integer constants.
 
+```cpp
+enum class Color { red, green, blue }; 
+enum class Traffic_light { red, yellow, green }; 
+Color col = Color::red;
+Traffic_light light = Traffic_light::red;
+```
+**Note:**  
+- Enumerators (e.g., `red`) are in the scope of their `enum class`, so `Color::red` and `Traffic_light::red` can be different.
+- Enumerations are used to represent small sets of integer values and are intended to make code more readable and less error-prone instead of using plain integers.
+- The `class` after the `enum` prevents accidental misuses of constants:
 
+```cpp
+Color x = red; // error: which red?
+Color y = Traffic_light::red; // error: that red is not a Color
+Color z = Color::red; // OK: this red is a Color
+```
 
+By default, an `enum class` has only assignment, initialization, and comparisons defined. However, you can define your own operators:
 
+```
+Traffic_light& operator++(Traffic_light& t)
+{
+    switch (t) {
+        case Traffic_light::green: return t = Traffic_light::yellow;
+        case Traffic_light::yellow: return t = Traffic_light::red;
+        case Traffic_light::red: return t = Traffic_light::green;
+    }
+}
 
-
-
-
-
+Traffic_light next = ++light;
+```
 
 
 
