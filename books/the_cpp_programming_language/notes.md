@@ -20,6 +20,8 @@
     - [2.2.5 Pointers, Arrays, and Loops](#225-pointers-arrays-and-loops)
   - [2.3 User-Defined Types](#23-user-defined-types)
     - [2.3.1 Structures](#231-structures)
+    - [2.3.2 Classes](#232-classes)
+    - [2.3.3 Enumerations](#233-enumerations)
 
 
 ## 2. A Tour of C++ Basics  
@@ -309,7 +311,6 @@ void f(Vector v, Vector& rv, Vector* pv)
     int i3 = pv->sz; // accessing a member through a pointer
 }
 ```
-
 This means:
 - `v` is passed by value → a copy of a Vector object is made.
 - `rv` is passed by reference → no copy is made, it refers directly to the original Vector.
@@ -320,6 +321,83 @@ This means:
 | `Vector v`   | Local copy        | Yes   | `v.sz`   | Changing `v` only changes the copy                  |
 | `Vector& rv` | Original object   | No    | `rv.sz`  | Changes affect the original                         |
 | `Vector* pv` | Pointer to object | No    | `pv->sz` | Changes affect the original (pointer must be valid) |
+
+#### 2.3.2 Classes
+
+Structs and classes are similar in that they allow you to separate operations from data. Classes are more powerful than structs because they enable you to model a "real type". 
+
+A real type is a type that:
+* **Hides its internal representation** from users
+* **Provides a clear, consistent interface**
+* **Allows safe future changes** to how data is represented internally
+
+This is important because early in C and old C++ (pre-classes), a `struct` was just a simple **bag of public data** — no hiding, no safety, no real abstraction.
+
+A class is defined to have a set of *members*, which can be data, function, or type members.
+
+The interface is defined by the *public* members of the class, and *private* members are accessible only through the interface.
+
+```cpp
+class Vector {
+public:
+    Vector(int s) : elem{new double[s]}, sz{s} {}   // construct a Vector
+    double& operator[](int i) { return elem[i]; }   // element access: subscripting
+    int size() { return sz; }
+
+private:
+    double* elem;   // pointer to the elements
+    int sz;         // the number of elements
+};
+```
+
+You can define a variable of type `Vector` like this:
+```cpp
+Vector v(6);
+```
+
+In this sense, `Vector` is a "handle" containing a pointer to the elements (`elem`) and the size of the vector (`sz`). 
+
+```cpp
+#include <iostream>
+
+class Vector {
+public:
+    Vector(int s) : elem{new double[s]}, sz{s} {}   // construct a Vector
+    double& operator[](int i) { return elem[i]; }   // element access: subscripting
+    int size() { return sz; }
+
+private:
+    double* elem;   // pointer to the elements
+    int sz;         // the number of elements
+};
+
+double read_and_sum(int s)
+{
+    Vector v(s);
+    for (int i = 0; i != v.size(); ++i) {
+        std::cin >> v[i];
+    }
+    double sum = 0;
+    for (int i = 0; i != v.size(); ++i) {
+        sum += v[i];
+    }
+    return sum;
+}
+
+int main()
+{
+    std::cout << read_and_sum(5);
+}
+```
+**Note:**  
+- The constructor `Vector()` replaces the `vector_init()` function used in the previous example.
+- Unlike the `vector_init()` function, the constructor guarantees that the `Vector` object is fully initialized when it is created.
+
+#### 2.3.3 Enumerations
+
+
+
+
 
 
 
