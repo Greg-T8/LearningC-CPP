@@ -1,10 +1,11 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-    ],
-    "settings": {},
-    "extensions": {
-    },
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "workspaceKeybindings.gccbuild.enabled": true     // Used for GCC Build
+  },
+  "extensions": {}
 }
