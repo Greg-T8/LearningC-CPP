@@ -457,7 +457,7 @@ int main()
         {
             ++nl;
         }
-        if (c == ' ' || c == '\n' || c == '\t')
+        if (c == ' ' || c == '\n' || c == '\t')     // Evaluates left to right. Stops as soon as truth or falsehood is known.
         {
             state = OUT;
         } else if (state == OUT)
@@ -484,6 +484,18 @@ cat lines.txt | ./word_count
 <img src="images/1746782932605.png" alt="alt text" width="550px">
 
 TODO: finish reading this section and do the exercises
+
+**Exercise 1-11:** How would you test the word count program? What kinds of input are most likely to uncover bugs if there are any?
+
+Use a text file and pipe it to the program. Test with:
+- Empty lines
+- Lines with only whitespace
+- Lines with a mix of tabs, spaces, and newlines
+- Very long lines
+- Unicode characters
+
+**Exercise 1-12:** Write a program that prints its input one word per line.
+
 
 
 ## 2. Types, Operators, and Expressions
