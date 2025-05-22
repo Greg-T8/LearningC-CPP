@@ -5,7 +5,6 @@
     }
   ],
   "settings": {
-    "workspaceKeybindings.gccbuild.enabled": true     // Used for GCC Build
   },
   "extensions": {}
 }

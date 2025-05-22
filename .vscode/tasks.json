@@ -1,159 +1,159 @@
 {
-    "tasks": [
-        {
-            "label": "GCC Build",
-            "type": "cppbuild",
-            "command": "/usr/bin/gcc",
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
-                "-Werror",
-                "-Wall",
-                "-Wextra",
-                "-Wpedantic",
-                "-std=c17"
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "silent",
-                "revealProblems": "onProblem",
-                "focus": false,
-                "panel": "shared",
-                "clear": false,
-                "showReuseMessage": false
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            }
-        },
-        {
-            "label": "GCC Run",
-            "type": "shell",
-            "command": "${fileDirname}/${fileBasenameNoExtension}",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "revealProblems": "onProblem",
-                "focus": true,
-                "panel": "shared",
-                "clear": true,
-                "showReuseMessage": false
-            },
-            "problemMatcher": [],
-            "group": "build"
-        },
-        {
-            "label": "GCC Build and Run",
-            "type": "shell",
-            "command": "${fileDirname}/${fileBasenameNoExtension}",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "revealProblems": "onProblem",
-                "focus": true,
-                "panel": "shared",
-                "clear": true,
-                "showReuseMessage": false
-            },
-            "dependsOn": "GCC Build",
-            "problemMatcher": [],
-            "group": "build"
-        },
-        {
-            "label": "G++ Build",
-            "type": "cppbuild",
-            "command": "/usr/bin/g++",
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
-                "-Werror",
-                "-Wall",
-                "-Wextra",
-                "-Wpedantic",
-                "-std=c++17"
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "presentation": {
-                "echo": true,
-                "reveal": "silent",
-                "revealProblems": "onProblem",
-                "focus": true,
-                "panel": "shared",
-                "clear": false,
-                "showReuseMessage": false
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            }
-        },
-        {
-            "label": "G++ Run",
-            "type": "shell",
-            "command": "${fileDirname}/${fileBasenameNoExtension}",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "revealProblems": "onProblem",
-                "focus": true,
-                "panel": "shared",
-                "clear": true,
-                "showReuseMessage": false
-            },
-            "problemMatcher": [],
-            "group": "build"
-        },
-        {
-            "label": "G++ Build and Run",
-            "type": "shell",
-            "command": "${fileDirname}/${fileBasenameNoExtension}",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "revealProblems": "onProblem",
-                "focus": true,
-                "panel": "shared",
-                "clear": true,
-                "showReuseMessage": false
-            },
-            "dependsOn": "G++ Build",
-            "problemMatcher": [],
-            "group": "build"
-        },
-        {
-            "label": "Make Clean",
-            "type": "shell",
-            "command": "make clean",
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": true,
-                "panel": "shared",
-                "clear": true
-            },
-            "problemMatcher": []
-        }
-    ],
-    "version": "2.0.0"
+  "tasks": [
+    {
+      "label": "GCC Build",
+      "type": "cppbuild",
+      "command": "/usr/bin/gcc",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}",
+        "-Werror",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-std=c17"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "revealProblems": "onProblem",
+        "focus": false,
+        "panel": "shared",
+        "clear": false,
+        "showReuseMessage": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "GCC Run",
+      "type": "shell",
+      "command": "${fileDirname}/${fileBasenameNoExtension}",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "revealProblems": "onProblem",
+        "focus": true,
+        "panel": "shared",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "GCC Build and Run",
+      "type": "shell",
+      "command": "${fileDirname}/${fileBasenameNoExtension}",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "revealProblems": "onProblem",
+        "focus": true,
+        "panel": "shared",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "dependsOn": "GCC Build",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "G++ Build",
+      "type": "cppbuild",
+      "command": "/usr/bin/g++",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}",
+        "-Werror",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-std=c++17"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "revealProblems": "onProblem",
+        "focus": true,
+        "panel": "shared",
+        "clear": false,
+        "showReuseMessage": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "G++ Run",
+      "type": "shell",
+      "command": "${fileDirname}/${fileBasenameNoExtension}",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "revealProblems": "onProblem",
+        "focus": true,
+        "panel": "shared",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "G++ Build and Run",
+      "type": "shell",
+      "command": "${fileDirname}/${fileBasenameNoExtension}",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "revealProblems": "onProblem",
+        "focus": true,
+        "panel": "shared",
+        "clear": true,
+        "showReuseMessage": false
+      },
+      "dependsOn": "G++ Build",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Clean C Binaries",
+      "type": "shell",
+      "command": "find . -maxdepth 1 \\( -name '*.out' -o -name '*.o' -o -perm -u+x -type f ! -name '*.c' ! -name '*.cpp' ! -name '*.h' \\) -exec rm -f {} +",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false,
+        "showReuseMessage": false
+      },
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    }
+  ],
+  "version": "2.0.0"
 }
