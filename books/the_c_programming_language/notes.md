@@ -483,8 +483,6 @@ cat lines.txt | ./word_count
 **Output:** First column is the number of lines, second is the number of words, and third is the number of characters.
 <img src="images/1746782932605.png" alt="alt text" width="550px">
 
-TODO: finish reading this section and do the exercises
-
 **Exercise 1-11:** How would you test the word count program? What kinds of input are most likely to uncover bugs if there are any?
 
 Use a text file and pipe it to the program. Test with:
@@ -495,6 +493,34 @@ Use a text file and pipe it to the program. Test with:
 - Unicode characters
 
 **Exercise 1-12:** Write a program that prints its input one word per line.
+
+```c
+int main()
+{
+    int c;
+
+    // Read characters until EOF and print each word on a new line.
+    while ((c = getchar()) != EOF) {
+        if (c == ' ' || c == '\t') {
+            putchar('\n');
+        }
+        else if (c == '\n') {
+            // No action needed for newlines
+        }
+        else if (c == '.') {
+            putchar('\n');
+            putchar(c);
+        }
+        else {
+            putchar(c);
+        }
+    }
+}
+```
+[`echo_input.c`](/books/the_c_programming_language/ch01/word_counting/ex1-12/echo_input.c)
+
+<img src="images/1747906023996.png" alt="alt text" width="550px">
+
 
 
 
