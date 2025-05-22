@@ -14,16 +14,15 @@ int main()
 
     // Read characters until EOF and print each word on a new line.
     while ((c = getchar()) != EOF) {
-        if (c == ' ' || c == '\t') {
+        if (c == '.' || c == ';' || c == ':') {
+            putchar('\n');
+            putchar(c);
+        }
+        else if (c == ' ' || c == '\t') {
             putchar('\n');
         }
         else if (c == '\n') {
             // No action needed for newlines
-        }
-        else if (c == '.' || c == ';' || c == ':') {
-            putchar('\n');
-            putchar(c);
-            putchar('\n');
         }
         else {
             putchar(c);
