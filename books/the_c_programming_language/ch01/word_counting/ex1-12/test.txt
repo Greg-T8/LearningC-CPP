@@ -1,1 +1,5 @@
-These are input parameters
+These are input parameters.
+This is a test file.
+
+This	line	uses	tabs.
+This:line;uses: colons;and; semicolons.
