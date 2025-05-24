@@ -614,6 +614,56 @@ void f(Vector& v)
 }
 ```
 
+The `out_of_range` type is defined in the standard library (in `<stdexcept>`).
+
+###### 2.4.3.2 Invariants
+
+An *invariant* is a condition that is always true at a particular point in a program.
+
+It is the job of a constructor to establish the invariant for its class (so that the member functions can rely on it) and for the member functions to make sure the invariant holds when they exit.
+
+```cpp
+Vector v(-27);  // will cause chaos because the invariant is not established
+```
+
+```cpp
+Vector::Vector(int s)
+{
+    if (s < 0) throw length_error{};    // establish the invariant
+    elem = new double[s];
+    sz = s;
+}
+```
+
+```cpp
+void test()
+{
+    // Make sure the invariant holds
+    try {
+        Vector v(-27);
+    }
+    catch (std::length_error) {
+        // handle negative size
+    }
+    catch (std::bad_alloc) {    // if `new` can't find memory to allocate `length_error`
+        // handle memory exhaustion
+    }
+}
+```
+
+The notion of invariants is central to the design of classes, and preconditions serve a similar role in the design of functions. Invariants
+- help us to understand precisely what we want
+- force us to be specific; that gives us a better chance of getting our code correct
+
+###### 2.4.3.3 Static Assertions
+
+
+
+
+
+
+
+
 
 
 
