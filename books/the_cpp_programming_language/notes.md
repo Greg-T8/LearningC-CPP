@@ -24,6 +24,8 @@
     - [2.3.3 Enumerations](#233-enumerations)
     - [2.4 Modularity](#24-modularity)
       - [2.4.1 Separate Compilation](#241-separate-compilation)
+      - [2.4.2 Namespaces](#242-namespaces)
+      - [2.4.3 Error Handling](#243-error-handling)
 
 
 ## 2. A Tour of C++ Basics  
@@ -541,6 +543,77 @@ Here's how the code fragments work together:
 ![](./images/20250524-codeseparation.svg)
 
 Code separation is very important. The best approach is to maximize modularity, represent that modularity logically through language features, and then exploit the modularity through files for effective separate compilation.
+
+##### 2.4.2 Namespaces
+
+Namespaces are a mechanism for expressing that some declarations belong together and that their names shouldn't clash with other names.
+
+```cpp
+namespace My_code {
+    class complex { /* ... */ };
+    complex sqrt(complex);
+    // ...
+    int main(); // scoped to My_code namespace
+}
+
+int My_code::main()
+{
+    complex z{1, 2};
+    auto z2 = sqrt(z);
+    std::cout << '{' << z2.real() << ',' << z2.imag() << "}\n";
+    // ...
+};
+
+int main()
+{
+    return My_code::main();  // Qualifying the call to My_code's main function
+}
+```
+
+To gain access to the names in a namespace, you can use the `using` directive:
+
+```cpp
+using namespace My_code;
+```
+
+##### 2.4.3 Error Handling
+
+One effect of this modularity and the use of libraries is that the point where a run-time error can be detected is separated from the point where it can be handled.
+
+###### 2.4.3.1 Exceptions
+
+What ought to be done when an error occurs?
+- The writer/implementer doesn't know what the user would like to have done.
+- The user cannot consistently detect the problem.
+
+The solution is to detect the error and then transfer control to a handler that can deal with the error:
+
+```cpp
+double& Vector::operator[](int i)
+{
+    if (i < 0 || size() <= i) throw out_of_range{"Vector::operator[]"};
+    return elem[i];
+}
+```
+
+The `throw` transfers control to a handler for exceptions of type `out_of_range` in some function that directly or indirectly called `Vector::operator[]`.
+
+The implementation unwinds the function call stack as needed to get back to the context of that caller:
+
+```cpp
+void f(Vector& v)
+{
+    // ...
+    try { // exceptions are handled by the handler defined below
+        v[v.size()] = 7; // try to access beyond the end of v
+    }
+    catch (out_of_range& e) { // oops: out_of_range error
+        // ... handle range error ...
+    }
+    // ...
+}
+```
+
 
 
 
