@@ -22,6 +22,8 @@
     - [2.3.1 Structures](#231-structures)
     - [2.3.2 Classes](#232-classes)
     - [2.3.3 Enumerations](#233-enumerations)
+    - [2.4 Modularity](#24-modularity)
+      - [2.4.1 Separate Compilation](#241-separate-compilation)
 
 
 ## 2. A Tour of C++ Basics  
@@ -416,7 +418,7 @@ Color z = Color::red; // OK: this red is a Color
 
 By default, an `enum class` has only assignment, initialization, and comparisons defined. However, you can define your own operators:
 
-```
+```cpp
 Traffic_light& operator++(Traffic_light& t)
 {
     switch (t) {
@@ -428,6 +430,108 @@ Traffic_light& operator++(Traffic_light& t)
 
 Traffic_light next = ++light;
 ```
+
+#### 2.4 Modularity
+
+A C** program consists of functions, user-defined types, class hierarchies, and templates. The key to managing this is to define the interactions among those parts. The first and foremost step is to distinguish between the *interface* and its *implementation*.
+
+A *declaration* specifies all that's needed to use a function or type:
+
+```cpp
+double sqrt(double);            // Declaration
+
+class Vector {
+public:
+    Vector(int s);              // Declaration of constructor
+    double& operator[](int i);  // Declaration of subscript operator
+    int size();                 // Declaration of size function
+private:
+    double* elem;
+    int sz;
+};
+```
+
+Elsewhere, you define the implementation: 
+
+```cpp
+double sqrt(double d)
+{
+    // ..algorithm as found in math textbook..
+}
+
+Vector::Vector(int s) : elem{new double[s]}, sz{s}
+{
+}
+
+double& Vector::operator[](int i) // definition of subscript operator
+{
+    return elem[i];
+}
+
+int Vector::size()  // definition of size member function
+{
+    return sz;
+}
+```
+
+**Note:** You must define `Vector`'s functions, but not `sqrt()` because it is defined in the standard library.
+
+##### 2.4.1 Separate Compilation
+
+Separate compilation is where user code sees only declarations of the types and functions used. The definitions are in separate source files and compiled separately. Such separation can be used to minimize compile times and to strictly enforce separation of logically distinct parts of a program (thus minimizing the chance of errors).
+
+A library is often a collection of separately compiled code fragments (e.g. functions).
+
+Typically, we place declarations that specify the interface to a module in a file with a name indicating its intended use:
+
+```cpp
+// Vector.h
+
+class Vector {
+public:
+    Vector(int s);
+    double& operator[](int i);
+    int size();
+private:
+    double* elem;
+    int sz;
+};
+```
+
+Then users will include that header file to access that interface:
+
+```cpp
+#include "Vector.h"     // get Vector's interface
+#include <cmath>        // get the standard-library math function interface including sqrt()
+using namespace std;    // makd std members visible
+
+double sqrt_sum(Vector& v)
+{
+    double sum = 0;
+    for (int i = 0; i != v.size(); ++i) 
+        sume += sqrt(v[i]);
+    return sum;
+}
+```
+
+The `.cpp` file providing the implementation of `Vector` will also include the `.h` file providing its interface:
+
+```cpp
+// Vector.cpp
+
+#include "Vector.h"     // get Vector's interface
+
+Vector::Vector(int s) : elem{new double[s]}, sz{s}
+{
+}
+
+double& Vector::operator[](int i)
+{
+    return elem[i];
+}
+
+
+
 
 
 
