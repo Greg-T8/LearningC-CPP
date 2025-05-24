@@ -530,6 +530,22 @@ double& Vector::operator[](int i)
     return elem[i];
 }
 
+int Vector::size()
+{
+    return sz;
+}
+```
+
+Here's how the code fragments work together:
+
+![](./images/20250524-codeseparation.svg)
+
+Code separation is very important. The best approach is to maximize modularity, represent that modularity logically through language features, and then exploit the modularity through files for effective separate compilation.
+
+
+
+
+
 
 
 
