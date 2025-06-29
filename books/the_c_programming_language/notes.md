@@ -565,6 +565,11 @@ int main()
 
 <img src="images/1751193157171.png" alt="alt text" width="550px">
 
+**Note:** By definition, chars are just small integers, so char variables and constants are identical ints in arithmetic expressions.
+
+**Exercise 1-13:** Write a program to print a histogram of the lengths of words in its input. It is easy to draw the histogram with the bars horizontal; a vertical orientation is more challenging.
+
+(in pogress)
 
 
 ## 2. Types, Operators, and Expressions
