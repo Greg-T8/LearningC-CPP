@@ -15,6 +15,7 @@
     - [1.5.2 Character Counting](#152-character-counting)
     - [1.5.3 Line Counting](#153-line-counting)
     - [1.5.4 Word Counting](#154-word-counting)
+  - [1.6 Arrays](#16-arrays)
 - [2. Types, Operators, and Expressions](#2-types-operators-and-expressions)
   - [Data Types and Sizes](#data-types-and-sizes)
 
@@ -155,7 +156,6 @@ Use `#define` to define symbolic constants:
 
 ```
 #define <name> <replacement text>
-
 ```
 Things to note:
 - The replacement text can be any sequence of characters, including numbers, letters, and punctuation.
@@ -521,6 +521,49 @@ int main()
 
 <img src="images/1747906023996.png" alt="alt text" width="550px">
 
+<img src="images/1751191169739.png" alt="alt text" width="300px">
+
+
+### 1.6 Arrays
+
+The following program counts the number of occurrences of each digit, whitespace character (blank, tab, newline), and all other characters.
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    int c, i, nwhite, nother;
+    int ndigit[10];
+
+    // Initialize counters
+    nwhite = nother = 0;
+
+    // Initialize digit count array
+    for (i = 0; i < 10; i++)
+        ndigit[i] = 0;
+
+    // Process input characters
+    while ((c = getchar()) != EOF)
+        if (c >= '0' && c <= '9')
+            ++ndigit[c - '0'];
+        else if (c == ' ' || c == '\n' || c == '\t')
+            ++nwhite;
+        else
+            ++nother;
+
+    // Output results
+    printf("digits = ");
+    for (i = 0; i < 10; i++)
+        printf(" %d", ndigit[i]);
+    printf(", whitespace = %d, other = %d\n", nwhite, nother);
+}
+```
+[`count_occurrences.c`](./ch01/arrays/count_occurrences.c)
+
+<img src="images/1751193129386.png" alt="alt text" width="550px">
+
+<img src="images/1751193157171.png" alt="alt text" width="550px">
 
 
 
