@@ -22,10 +22,14 @@
     - [2.3.1 Structures](#231-structures)
     - [2.3.2 Classes](#232-classes)
     - [2.3.3 Enumerations](#233-enumerations)
-    - [2.4 Modularity](#24-modularity)
-      - [2.4.1 Separate Compilation](#241-separate-compilation)
-      - [2.4.2 Namespaces](#242-namespaces)
-      - [2.4.3 Error Handling](#243-error-handling)
+  - [2.4 Modularity](#24-modularity)
+    - [2.4.1 Separate Compilation](#241-separate-compilation)
+    - [2.4.2 Namespaces](#242-namespaces)
+    - [2.4.3 Error Handling](#243-error-handling)
+      - [2.4.3.1 Exceptions](#2431-exceptions)
+      - [2.4.3.2 Invariants](#2432-invariants)
+      - [2.4.3.3 Static Assertions](#2433-static-assertions)
+  - [2.6 Advice](#26-advice)
 
 
 ## 2. A Tour of C++ Basics  
@@ -331,9 +335,9 @@ This means:
 Structs and classes are similar in that they allow you to separate operations from data. Classes are more powerful than structs because they enable you to model a "real type". 
 
 A real type is a type that:
-* **Hides its internal representation** from users
-* **Provides a clear, consistent interface**
-* **Allows safe future changes** to how data is represented internally
+- Hides its internal representation from users
+- Provides a clear, consistent interface
+- Allows safe future changes to how data is represented internally
 
 This is important because early in C and old C++ (pre-classes), a `struct` was just a simple **bag of public data** — no hiding, no safety, no real abstraction.
 
@@ -433,7 +437,7 @@ Traffic_light& operator++(Traffic_light& t)
 Traffic_light next = ++light;
 ```
 
-#### 2.4 Modularity
+### 2.4 Modularity
 
 A C** program consists of functions, user-defined types, class hierarchies, and templates. The key to managing this is to define the interactions among those parts. The first and foremost step is to distinguish between the *interface* and its *implementation*.
 
@@ -478,7 +482,7 @@ int Vector::size()  // definition of size member function
 
 **Note:** You must define `Vector`'s functions, but not `sqrt()` because it is defined in the standard library.
 
-##### 2.4.1 Separate Compilation
+#### 2.4.1 Separate Compilation
 
 Separate compilation is where user code sees only declarations of the types and functions used. The definitions are in separate source files and compiled separately. Such separation can be used to minimize compile times and to strictly enforce separation of logically distinct parts of a program (thus minimizing the chance of errors).
 
@@ -544,7 +548,7 @@ Here's how the code fragments work together:
 
 Code separation is very important. The best approach is to maximize modularity, represent that modularity logically through language features, and then exploit the modularity through files for effective separate compilation.
 
-##### 2.4.2 Namespaces
+#### 2.4.2 Namespaces
 
 Namespaces are a mechanism for expressing that some declarations belong together and that their names shouldn't clash with other names.
 
@@ -576,11 +580,11 @@ To gain access to the names in a namespace, you can use the `using` directive:
 using namespace My_code;
 ```
 
-##### 2.4.3 Error Handling
+#### 2.4.3 Error Handling
 
 One effect of this modularity and the use of libraries is that the point where a run-time error can be detected is separated from the point where it can be handled.
 
-###### 2.4.3.1 Exceptions
+##### 2.4.3.1 Exceptions
 
 What ought to be done when an error occurs?
 - The writer/implementer doesn't know what the user would like to have done.
@@ -616,7 +620,7 @@ void f(Vector& v)
 
 The `out_of_range` type is defined in the standard library (in `<stdexcept>`).
 
-###### 2.4.3.2 Invariants
+##### 2.4.3.2 Invariants
 
 An *invariant* is a condition that is always true at a particular point in a program.
 
@@ -655,9 +659,39 @@ The notion of invariants is central to the design of classes, and preconditions 
 - help us to understand precisely what we want
 - force us to be specific; that gives us a better chance of getting our code correct
 
-###### 2.4.3.3 Static Assertions
+##### 2.4.3.3 Static Assertions
 
+Exceptions report errors at run time. However, you can use static assertions to perform simple checks on other properties at compile time:
 
+```cpp
+satic_assert(4 <= sizeof(int), "integers are too small");       // check integer size
+```
+
+This will write a compile-time error if an `int` on this system does not have at least 4 bytes.
+
+The `static_assert` mechanism can be used for anything that can be expressed in a constent expression.
+
+```cpp
+constexpr double C = 299792.458         // km/s
+
+void f(double speed)
+{
+    const double local_max = 160.0 / (60 * 60)          // 160 km/h ==160.0/(60*60) km/s     
+    static_assert(speed < C, "can't go that fast");         // error: speed must be a constant
+    static_assert(local_max < C, "can't go that fast");         // OK
+    // ...
+}
+```
+
+In general, `static_assert(A,S)` prints `S` as a compiler error message if `A` is not `true`.
+
+The most important uses of `static_assert` come when making assertions about types used as parameters in generic programming. 
+
+### 2.6 Advice
+
+1. Don't panic! All will become clear in time.
+2. You don't have to know every detail of C++ to write good programs.
+3. Focus on programming techniques, not on language features.
 
 
 
