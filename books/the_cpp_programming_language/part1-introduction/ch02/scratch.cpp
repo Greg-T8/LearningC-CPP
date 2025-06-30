@@ -1,30 +1,9 @@
-double sqrt(double);            // Declaration
+constexpr double C = 299792.458
 
-class Vector {
-public:
-    Vector(int s);              // Declaration of constructor
-    double& operator[](int i);  // Declaration of subscript operator
-    int size();                 // Declaration of size function
-private:
-    double* elem;
-    int sz;
-};
-
-double sqrt(double d)
+void f(double speed)
 {
-    // ..algorithm as found in math textbook..
-}
-
-Vector::Vector(int s) : elem{new double[s]}, sz{s}
-{
-}
-
-double& Vector::operator[](int i) // definition of subscript operator
-{
-    return elem[i];
-}
-
-int Vector::size()  // definition of size member function
-{
-    return sz;
+    const double local_max = 160.0 / (60 * 60)
+    static_assert(speed < C, "can't go that fast");
+    static_assert(local_max < C, "can't go that fast");
+    // ...
 }
