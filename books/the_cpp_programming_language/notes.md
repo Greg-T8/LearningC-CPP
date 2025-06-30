@@ -10,8 +10,10 @@
 </details>
 
 <!-- omit in toc -->
+<!-- @import-start toc -->
 ## Contents
 
+- [Contents](#contents)
 - [2. A Tour of C++ Basics](#2-a-tour-of-c-basics)
   - [2.2 The Basics](#22-the-basics)
     - [2.2.2 Types, Variables, and Arithmetic](#222-types-variables-and-arithmetic)
@@ -31,6 +33,7 @@
       - [2.4.3.3 Static Assertions](#2433-static-assertions)
   - [2.6 Advice](#26-advice)
 
+<!-- @import-end toc -->
 
 ## 2. A Tour of C++ Basics  
 
