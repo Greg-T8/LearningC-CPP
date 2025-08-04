@@ -28,19 +28,21 @@ int main()
             word_length++;
         }
         else {
-            // If word boundary is reached, update histogram and reset word length
-            if (word_length > 0 && word_length < max_word_length) {
-                word_length_array[word_length]++;
-            }
-            else {
-                // Reset word length if not a valid word
-                word_length = 0;
-            }
+            // Word boundary reached; update histogram and reset word length
+            word_length_array[word_length]++;
+            word_length = 0;
+        }
     }
 
     // Print the word length histogram
     printf("Word Length Histogram:\n");
-    for (int i = 0; i < (max_word_length + 1); i++)
-        printf("%d: %d", i, word_length_array[i]);
-
+    for (int i = 1; i < (max_word_length + 1); i++) {
+        // Print word length label
+        if (i < 10) { printf("%d: ", i); } else { printf("%d:", i); }
+        // Print histogram bars for each word length
+        for (int j = 1; j <= word_length_array[i]; j++) {
+            putchar('|');
+        }
+        printf("\n");
+    }
 }
