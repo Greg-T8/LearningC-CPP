@@ -569,7 +569,75 @@ int main()
 
 **Exercise 1-13:** Write a program to print a histogram of the lengths of words in its input. It is easy to draw the histogram with the bars horizontal; a vertical orientation is more challenging.
 
-(in pogress)
+```c
+int main()
+{
+    int c, word_length;
+    int max_word_length;
+
+    max_word_length = 20;
+    int word_length_array[max_word_length + 1];
+
+    // Initialize the word length array to zero
+    for (int i = 0; i < (max_word_length + 1); i++)
+        word_length_array[i] = 0;
+
+    // Read input and count word lengths
+    word_length = 0;
+    while ((c = getchar()) != EOF) {
+        // Check if character is part of a word
+        if (c != ' ' && c != '\n' && c != '\t') {
+            word_length++;
+        }
+        else {
+            // Word boundary reached; update histogram and reset word length
+            word_length_array[word_length]++;
+            word_length = 0;
+        }
+    }
+
+    // Print the word length histogram
+    printf("Word Length Histogram:\n");
+    for (int i = 1; i < (max_word_length + 1); i++) {
+        // Print word length label
+        if (i < 10) { printf("%d: ", i); } else { printf("%d:", i); }
+        // Print histogram bars for each word length
+        for (int j = 1; j <= word_length_array[i]; j++) {
+            putchar('|');
+        }
+        printf("\n");
+    }
+}
+```
+```bash
+╭─( ~/learningC-CPP/books/the_c_programming_language/ch01/arrays/exercises/1-13 [main…]
+╰╴% cat testfile.txt | ./histogram_lengths    
+Word Length Histogram:
+1: ||||||||
+2: |||||||||||||||
+3: ||||||||||||||
+4: |||||||||||||
+5: ||||||||||||||||||
+6: ||||||||||||||
+7: |||||||||||
+8: |||
+9: ||||||
+10:||
+11:|
+12:|
+13:|
+14:
+15:|
+16:
+17:
+18:
+19:|
+20:
+```
+
+**Exercise 1-14:** Write a program to print a histogram of the frequencies of different characters in its input.
+
+
 
 
 ## 2. Types, Operators, and Expressions
