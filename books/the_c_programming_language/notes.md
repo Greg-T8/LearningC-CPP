@@ -16,6 +16,7 @@
     - [1.5.3 Line Counting](#153-line-counting)
     - [1.5.4 Word Counting](#154-word-counting)
   - [1.6 Arrays](#16-arrays)
+  - [1.7 Functions](#17-functions)
 - [2. Types, Operators, and Expressions](#2-types-operators-and-expressions)
   - [Data Types and Sizes](#data-types-and-sizes)
 
@@ -570,6 +571,13 @@ int main()
 **Exercise 1-13:** Write a program to print a histogram of the lengths of words in its input. It is easy to draw the histogram with the bars horizontal; a vertical orientation is more challenging.
 
 ```c
+/*
+    Program: Word Length Histogram
+    Author: Greg Tate
+    Date: 2025-08-03
+    Context: The C Programming Language, Chapter 1, Arrays, Exercise 1-13
+*/
+
 int main()
 {
     int c, word_length;
@@ -610,8 +618,7 @@ int main()
 }
 ```
 ```bash
-╭─( ~/learningC-CPP/books/the_c_programming_language/ch01/arrays/exercises/1-13 [main…]
-╰╴% cat testfile.txt | ./histogram_lengths    
+cat testfile.txt | ./histogram_lengths    
 Word Length Histogram:
 1: ||||||||
 2: |||||||||||||||
@@ -702,6 +709,89 @@ l: |||
 o: ||
 r: |
 ```
+
+### 1.7 Functions
+
+Functions provide a way to encapsulate some computation, which can then be used without worrying about its implementation. 
+
+With properly designed functions, it is possible to ignore *how* a job is done; knowing *what* is done is sufficient.
+
+The following code demonstrates a simple function that calculates the power of a number:
+
+```c
+#include <stdio.h>
+
+// Function declaration, also known as a function prototype
+int power(int m, int n);
+
+int main()
+{
+    int i;
+    for (i = 0; i < 10; ++i) {
+        printf("%d %d %d\n", i, power(2, i), power(-3, i));
+    }
+    return 0;
+}
+
+// Function definition: return-type  function-name(parameter declarations, if any)
+int power(int base, int n)
+{
+    int i, p;
+    p = 1;
+    for (i = 1; i <= n; ++i) {
+        p = p * base;
+    }
+    return p;
+}
+```
+```bash
+./power 
+0 1 1
+1 2 -3
+2 4 9
+3 8 -27
+4 16 81
+5 32 -243
+6 64 729
+7 128 -2187
+8 256 6561
+9 512 -19683
+```
+
+We generally use *parameter* for a variable named in the parenthesized list in a function definition, and *argument* for a value passed to a function when it is called.
+
+The function declaration must agree with the function definition; otherwise, the compiler will issue a warning or error.
+
+Parameter names within the function declaration are optional. You can write the declaration as:
+
+```c
+int power(int, int);
+```
+
+Prior to ANSI C, the original C language did not require function declarations:
+
+```c
+int power();                        // No parameter list was permitted in the declaration
+
+// main () {}
+
+power(base, n)
+int base, n;                        // Parameter types declared before the opening brace in original C
+{
+    int i, p;
+    p = 1;
+    for (i = 1; i <= n; ++i)
+        p = p * base;
+    return p;
+}
+```
+
+The introduction of function declarations with parameter types in ANSI C made it much easier for the compiler to detect errors in the number of arguments or their types.
+
+
+
+
+
 
 
 ## 2. Types, Operators, and Expressions
