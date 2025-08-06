@@ -66,7 +66,7 @@ main()
     printf("hello, world\n");
 }
 ```
-[`hello.c`](./ch01/hello_world/hello.c)
+[`hello.c`](<./ch01/1.1 hello_world/hello.c>)
 
 ### 1.2 Variables and Arithmetic Expressions
 
@@ -869,7 +869,7 @@ The story is different for arrays. When the name of an array is used as an argum
 
 ### 1.9 Character Arrays
 
-
+The array of characters is the most common type of array in C.
 
 
 
