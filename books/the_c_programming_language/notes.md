@@ -17,6 +17,8 @@
     - [1.5.4 Word Counting](#154-word-counting)
   - [1.6 Arrays](#16-arrays)
   - [1.7 Functions](#17-functions)
+  - [1.8 Arguments—Call by Value](#18-argumentscall-by-value)
+  - [1.9 Character Arrays](#19-character-arrays)
 - [2. Types, Operators, and Expressions](#2-types-operators-and-expressions)
   - [Data Types and Sizes](#data-types-and-sizes)
 
@@ -820,6 +822,57 @@ int convert_temp(int lower, int upper, int step)
     return 0;
 }
 ```
+```bash
+% ./temp                                                          
+  0  -17.8
+ 20   -6.7
+ 40    4.4
+ 60   15.6
+ 80   26.7
+100   37.8
+120   48.9
+140   60.0
+160   71.1
+180   82.2
+200   93.3
+220  104.4
+240  115.6
+260  126.7
+280  137.8
+300  148.9
+```
+
+### 1.8 Arguments&mdash;Call by Value
+
+In C, all function arguments are passed "by value", meaning the called function is given the values of its argumentsin temporary variables rather than the originals.
+
+This leads to some different properties than are seen with "call by reference" languages, like Fortran or Pascal, where the called routine has access to the original arugment, not a local copy.
+
+The main distinction is that in C the called function cannot directly alter a variable in the calling function; it can only alter its private, temporary copy.
+
+Call by value usually leads to more compact programs with fewer extraneous variables, because parameters can be treated as conveniently initialized local variables in the called routine.
+
+```c
+int power(int base, int n)                  // n is used as a temporary variable
+{
+    int p;
+    for (p = 1; n > 0; --n) {               // whatever is done to n doesn't affect the argument that power was originally called with
+        p = p * base;
+    }
+    return p;
+}
+```
+
+When necessary, it is possible to modify a variable in a calling routine. The caller must provide the *address* of the variable to be set (technically, a pointer to the variable), and the called function must declare the parameter to be a pointer and access the memory directly through it. 
+
+The story is different for arrays. When the name of an array is used as an argument, the value passed to the function is the location or address of the beginning of the array&mdash;there is no copying of array elements. 
+
+### 1.9 Character Arrays
+
+
+
+
+
 
 
 
