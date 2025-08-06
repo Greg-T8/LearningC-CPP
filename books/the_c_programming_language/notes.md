@@ -871,7 +871,12 @@ The story is different for arrays. When the name of an array is used as an argum
 
 The array of characters is the most common type of array in C.
 
+The following program prints the longest line from the input:
 
+```c
+
+
+```
 
 
 
