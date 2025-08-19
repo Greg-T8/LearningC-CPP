@@ -1,839 +1,687 @@
 <!-- omit in toc -->
-## 1. A Tutorial Introduction
-- [1.2 Variables and Arithmetic Expressions](#12-variables-and-arithmetic-expressions)
-- [1.3 The `for` Statement](#13-the-for-statement)
-- [1.4 Symbolic Constants](#14-symbolic-constants)
-- [1.5 Character Input and Output](#15-character-input-and-output)
-  - [1.5.1 File Copying](#151-file-copying)
-  - [1.5.2 Character Counting](#152-character-counting)
-  - [1.5.3 Line Counting](#153-line-counting)
-  - [1.5.4 Word Counting](#154-word-counting)
-- [1.6 Arrays](#16-arrays)
-- [1.7 Functions](#17-functions)
-- [1.8 Arguments—Call by Value](#18-argumentscall-by-value)
-- [1.9 Character Arrays](#19-character-arrays)
+# 2. A Tour of C++ Basics  
+- [2.1 Introduction](#21-introduction)
+- [2.2 The Basics](#22-the-basics)
+  - [2.2.2 Types, Variables, and Arithmetic](#222-types-variables-and-arithmetic)
+  - [2.2.3 Constants](#223-constants)
+  - [2.2.4 Tests and Loops](#224-tests-and-loops)
+  - [2.2.5 Pointers, Arrays, and Loops](#225-pointers-arrays-and-loops)
+- [2.3 User-Defined Types](#23-user-defined-types)
+  - [2.3.1 Structures](#231-structures)
+  - [2.3.2 Classes](#232-classes)
+  - [2.3.3 Enumerations](#233-enumerations)
+- [2.4 Modularity](#24-modularity)
+  - [2.4.1 Separate Compilation](#241-separate-compilation)
+  - [2.4.2 Namespaces](#242-namespaces)
+  - [2.4.3 Error Handling](#243-error-handling)
+    - [2.4.3.1 Exceptions](#2431-exceptions)
+    - [2.4.3.2 Invariants](#2432-invariants)
+    - [2.4.3.3 Static Assertions](#2433-static-assertions)
+- [2.6 Advice](#26-advice)
 
+## 2.1 Introduction
 
+The goal of this chapter and the next three is to give you a sense of what C++ is, without going into detail. This chapter introduces C++ notation, its model of memory and computation, and the basic tools for organizing code into a program. These features support procedural programming, a style common in C.
 
+This tour avoids a strictly bottom-up approach. It allows the use of powerful features early on. For instance, loops are used long before they are explained in detail in Chapter 10. Likewise, classes, templates, dynamic memory, and standard-library details are introduced gradually, but standard types like vector, string, complex, map, unique\_ptr, and ostream are used whenever they make examples clearer.
 
-The Hello, World! example:
+Think of this as a short sightseeing tour of a city, like Copenhagen or New York. You get a glimpse of the major sights, hear a few stories, and leave with suggestions for further exploration. You will not know the city deeply after a few hours, but you will have a sense of its character and what might interest you. Real understanding comes with time and experience.
 
-```c
-#include <stdio.h>
+## 2.2 The Basics
 
-main()
-{
-    printf("hello, world\n");
-}
-```
-[`hello.c`](<./ch01/1.1 hello_world/hello.c>)
-
-### 1.2 Variables and Arithmetic Expressions
-
-Temperature conversion using integer variables:
-
-```c
-main()
-{
-    int fahr, celsius;
-    int lower, upper, step;
-
-    lower = 0;
-    upper = 300;
-    step = 20;
-    fahr = lower;
-
-    while (fahr <= upper)
-    {
-        celsius = 5 * (fahr - 32) / 9;
-        printf("%3d\t%6d\n", fahr, celsius);
-        fahr = fahr + step;
-    }
-}
-```
-[`1-temp-integer.c`](./ch01/temperature/1-temp-integer.c)
-
-Things to note:
-- The `main()` function does not have a return type. In C, the default return type is `int`, so it is better to declare it as `int main()`.
-- The `printf()` function is used to print formatted output. The format string specifies how the output should be formatted.
-- The `%d` format specifier is used for integers, and `%f` is used for floating-point numbers.
-- The expression `5 * (fahr - 32) / 9` performs integer division, which may lead to loss of precision. To avoid this, you can use floating-point arithmetic.
-
-Temperature conversion using floating-point variables:
-
-```c
-main()
-{
-    float fahr, celsius;
-    float lower, upper, step;
-
-    lower = 0;
-    upper = 300;
-    step = 20;
-    fahr = lower;
-    printf("Fahrenheit to Celsius Conversion Table\n");
-    while (fahr <= upper)
-    {
-        celsius = (5.0 / 9.0) * (fahr - 32);
-        printf("%3.0f\t%6.1f\n", fahr, celsius);
-        fahr = fahr + step;
-    }
-}
-```
-[`2-temp-float.c`](./ch01/temperature/2-temp-float.c)
-
-Using the `printf()` function:
-
-| Format | Description                                                        |
-| ------ | ------------------------------------------------------------------ |
-| %d     | print as decimal integer                                           |
-| %6d    | print as decimal integer, at least 6 characters wide               |
-| %f     | print as floating point                                            |
-| %6f    | print as floating point, at least 6 characters wide                |
-| %.2f   | print as floating point, 2 characters after decimal point          |
-| %6.2f  | print as floating point, at least 6 wide and 2 after decimal point |
-
-### 1.3 The `for` Statement
-
-Temperature conversion using the `for` statement:
-
-```c
-int main()
-{
-    int fahr;
-    for (fahr = 0; fahr <= 300; fahr += 20)
-    {
-        printf("%3d %6.1f\n", fahr, (5.0 / 9.0) * (fahr - 32));
-    }
-}
-```
-[`4-temp-conversion-for.c`](./ch01/temperature/4-temp-conversion-for.c)
-
-Things to note:
-- The choice between `while` and `for` is aribrary, based on which seems clearer.
-- The `for` statement is usually appropriate for loops in which the initialization and increment are single statements and logically related.
-
-### 1.4 Symbolic Constants
-
-Use `#define` to define symbolic constants:
-
-```
-#define <name> <replacement text>
-```
-Things to note:
-- The replacement text can be any sequence of characters, including numbers, letters, and punctuation.
-
-Temperature conversion using symbolic constants:
-
-```c
-#include <stdio.h>
-
-#define LOWER 0
-#define UPPER 300
-#define STEP 20
+A Hello World program in C++:
+```cpp
+#include <iostream>
 
 int main()
 {
-    int fahr;
-    for (fahr = LOWER; fahr <= UPPER; fahr += STEP)
-    {
-        printf("%3d %6.1f\n", fahr, (5.0 / 9.0) * (fahr - 32));
+    std::cout << "Hello, World!\n";
+}
+```
+- `#include <iostream>`: This is a preprocessor directive that tells the compiler to include the standard input-output stream library, which is necessary for using `std::cout`.
+
+### 2.2.2 Types, Variables, and Arithmetic
+
+A *declaration* is a statement that introduces a name into a program. It specifies a type for the named entity:
+- A *type* defines a set of possible values and a set of operations (for an object)
+- An *object* is some memory that holds a value of some type
+- A *value* is a set of bits interpreted according to a type
+- A *variable* is a named object
+
+Notations for expression initialization:
+```cpp
+int i1 = 7.2;      // Implicit conversion from double to int
+int i2{7};         // Corrected: Removed narrowing conversion
+int i3 {7};        // Allows for spaces in initialization
+int i4{7.2};       // error: floating-point integer narrowing conversion
+int i5 = {7};      // Corrected: Fixed syntax error
+```
+
+- Use the general `{}`-list form when in doubt with initialization; it saves you from conversions thatlose information (narrowing conversions).
+
+- When defining a variable, you don't need to state its type explicitly when the compiler can deduce it. Use `auto` for type deduction:
+```cpp
+auto b = true;     // a bool
+auto ch = 'x';     // a char
+auto i = 123;      // an int
+auto d = 1.2;      // a double
+auto z = sqrt(y);  // z has type of whatever sqrt(y) returns
+```
+
+- Using `auto` helps avoid redundancy with long type names and makes the code easier to read.
+- `auto` is important in generic programming where the exact type of the object can be hard for the programmer to know.
+
+### 2.2.3 Constants
+- C++ supports two notions of immutability:
+    - `const` (constant): meaning routhly "I promise not to change this value". Used primarily to specify interfaces, so that data can be passed to functions without fear of it being changed.
+    - `constexpr` (constant expression): meaning "to be evaluated at compile time". Used primarily to specify constants, to allow placement of data in read-only memory (where it is unlikely to be corrupted), and for performance.
+    
+```cpp
+const int dmv = 17;                         // dmv is a named constant
+int var = 17;                               // var is not a constant
+constexpr double max1 = 1.4*square(dmv);    // OK if square(17) is a constant expression
+constexpr double max2 = 1.4*square(var);    // error: var is not a constant expression
+const double max3 = 1.4*square(var);        // OK, may be evaluated at run time
+double sum(const vector<double>&);          // sum will not modify its argument
+vector<double> v {1.2, 3.4, 4.5};           // v is not a constant
+const double s1 = sum(v);                   // OK: evaluated at run time
+constexpr double s2 = sum(v);               // error: sum(v) not constant expression; cannot be evaluated at compile time
+```
+
+- For a function to be usable in a *constant expression*, i.e., an expression evaluated by the compiler, it must be defined `constexpr`.
+- `constexpr` statements must be simple: just a `return` statement computing a value.
+```cpp
+constexpr double square(double x) { return x*x; } 
+```
+- `constexpr` functions can have non-`constexpr` parameters, but the result is not a constant expression. C++ allows for this so that you don't have to define the same function twice, once for `constexpr` and once for non-`constexpr`.
+- Places where `constexpr` are used: array bounds, case labels, some template arguments, constants declared using `constexpr`.
+
+### 2.2.4 Tests and Loops
+
+Here is a simple function that prompts the user and returns a Boolean indicating a response:
+
+```cpp
+bool accept()
+{
+    cout << "Do you want to continue? (y/n)\n";
+    char answer = 0;
+    cin >> answer;
+    if (answer == 'y') return true;
+        return false;
+}
+```
+
+- The `<<` operator is called "put to".
+- The `>>` operator is called "get from".
+
+Here is a modified version that allows for taking an 'n':
+
+```cpp
+bool accept2()
+{
+    cout << "Do you want to continue? (y/n)\n";
+    char answer = 0;
+    cin >> answer;
+    switch (answer) {
+        case 'y':
+            return true;
+        case 'n':
+            return false;
+        default:
+            cout << "I'll take that as a 'no'\n";
+            return false;
     }
 }
 ```
-[6-temp-using-defines.c](./ch01/temperature/6-temp-using-defines.c)
 
-### 1.5 Character Input and Output
+Here is an example that gives the user a few tries to enter a valid response:
 
-- A *text stream* is a sequence of characters divided into lines; each line consists of zero or more characters followed by a newline.
-- `getchar()` and `putchar()` are the simplest library functions for reading and writing characters.
-- `getchar()` reads the next character from the input stream and returns it as an `int`. It returns `EOF` when the end of the file is reached.
-- `putchar()` writes a character (converted to an unsigned char) to the output stream and returns it as an `int`. It returns `EOF` if an error occurs.
-
-#### 1.5.1 File Copying
-
-In the following program, `c` is declared as an `int` so that it can accommodate the value of `EOF`, which is typically defined as -1. If `c` were declared as a `char`, it would not be able to hold the value of `EOF`, and the program would not work correctly.
-
-```c
-#include <stdio.h>
-
-int main() {
-    int c;                        // Variable to store each character read from input
-
-    c = getchar();                // Read the first character from input
-    while (c != EOF) {            // Loop until End Of File (EOF) is encountered
-        putchar(c);               // Output the character to standard output
-        c = getchar();            // Read the next character from input
+```cpp
+bool accept3()
+{
+    int tries = 1;
+    while (tries < 4) {
+        cout << "Do you want to continue? (y/n)\n";
+        char answer = 0;
+        cin >> answer;
+        switch (answer) {
+            case 'y':
+                return true;
+            case 'n':
+                return false;
+            default:
+                cout << "Sorry, I don't understand that.\n";
+                ++tries;
+        }
     }
+    cout << "I'll take that as a 'no'\n";
+    return false;
+}
+```
+    
+### 2.2.5 Pointers, Arrays, and Loops
+
+An array of elements of type `char` can be declared as follows:
+```cpp
+char v[6]; // Array of 6 characters
+```
+A pointer can be declared like this:
+```cpp
+char* p; // Pointer to a character
+```
+In declarations, `[]` means "array of" and `*` means "pointer to". 
+
+A pointer variable can hold the address of an object of the appropriate type:
+```cpp
+char* p = &v[3]; // p points to the 4th element of v
+char x = *p;     // *p is the object that p points to
+```
+
+In an expression, prefix unary `*` means "contents of" and prefix unary `&` means "address of". This can be illustrated with the following example:
+
+![](./images/20250501-ch02-pointer_reference.svg)
+
+The following code copies ten elements from one array to another:
+```cpp
+void copy_fct()
+{
+    int v1[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int v2[10];
+    for (auto i=0; i != 10; ++i)
+        v2[i] = v1[i]; // copy element by element
 }
 ```
 
-[`1_char.c`](./ch01/file_copying/1_char.c)
-
-Expressions return a value. The expression `c = getchar()` returns the value of `c` after the assignment is made.
-
-The following code demonstrates reading input until EOF and printing the final value of `c`:
-
-```c
-#include <stdio.h>
-
-// Declare main function and variable for input character
-int main() {
-    int c;
-
-    // Read characters from input until EOF is encountered
-    while ((c = getchar()) != EOF) {
-    }
-
-    // Print the value of c after EOF is reached
-    printf("The value of c is: %2d", c);
+The following code uses a range-`for`-statement:
+```cpp
+void print()
+{
+    int v[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    for (auto x:v)
+        cout << x << '\n'; // print each element
+    for (auto x:{10, 21, 32, 43, 54, 65}
+        cout << x << '\n'; // print each element
 }
 ```
-[`1-6e.c`](./ch01/file_copying/1-6e.c)
 
-**Output:**  
-<img src="images/1745314287089.png" alt="alt text" width="300px">
-
-
-#### 1.5.2 Character Counting
-
-The following program counts the number of characters in the input:
-
-```c
-#include <stdio.h>
-
-int main() {
-    long nc = 0;                     // Initialize character count to zero
-    while (getchar() != EOF) {       // Loop until EOF is encountered
-        ++nc;                        // Increment character count
-        printf("%ld\n", nc);         // Print the current character count. `ld` is used for long integers.
-    }
+Instead of copying values into `x`, you can refer to each element of `v` directly:
+```cpp
+void increment()
+{
+    int v[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    for (auto& x:v) // x is a reference to each element of v
+        ++x; // increment each element
+    // ...
 }
 ```
-[`1_character_count.c`](./ch01/character_counting/1_character_count.c)
+In a declaration, `&` means "reference to". A reference is similar to a pointer, except that you don't need to prefix `*` to access the value referred to by the reference. Also, a reference cannot be made to refer to a different object after it has been initialized.
 
-Things to note:
-- The program accumulates the count in a variable `nc` of type `long` instead of `int` to avoid overflow for large inputs.
-- The conversion specifier `%ld` is used to print long integers.
+When used in declarations, operators (such as `&`, `*`, and `[]`) are called *declarator operators*:
 
-The following program stores bigger counts using a double (double precision float):
+```cpp
+T a[n];        // T[n]: array of n Ts
+T* p;          // T*: pointer to T
+T& r;          // T&: reference to T
+T f(A);        // T(A): function taking argument of type A returning a result of type T
+```
 
-```c
-#include <stdio.h>
+We try to ensure that a pointer always points to a valid object, so that dereferencing it is valid. When we don't have an object to point to, or if we need to represent "no object available" (e.g. for an end of a list), we give the pointer the value `nullptr` ("the null pointer").
 
-int main() {
-    double nc = 0;                   // Initialize character count to zero
-    for (nc = 0; getchar() != EOF; ++nc) {
-        // Increment character count for each input character
-    }
-    printf("%.0f\n", nc);            // Print the total character count without decimals
+There is only one `nullptr` by all pointer types:
+```cpp
+double* pd = nullptr;
+Link<Record>* lst = nullptr;  // pointer to a Link to a Record
+int x = nullptr;              // error: nullptr is a pointer, not an integer
+```
+
+It is a good idea to check that a pointer argument actually points to something:
+```cpp
+int count_x(char* p, char x)
+{
+    if (p == nullptr) return 0;
+    int count = 0;
+    for (; *p != 0; ++p)
+    if (*p == x) ++ count;
+    return count;
 }
 ```
-[`2_character_count.c`](./ch01/character_counting/2_character_count.c)
+Note how you can move a pointer to point to the next element in an array by incrementing it, and that you can leave out the initializer in the `for` statement.
 
+The definition of `count_x` assumesthat `char*` is a C-style string, i.e., the pointer points to a sequence of characters terminated by a null character `'\0'`. 
+
+In older code, `0` or `NULL` is typically used instead of `nullptr`. However, using `nullptr`  elminates potential confusion between integers (such as `0` and `NULL`) and pointers (such as `nullptr`).
+
+
+## 2.3 User-Defined Types
+
+Built-in types are those that are built from the fundamental types (`int`, `char`, `double`, etc.), the `const` modifer, and the declarator operators (`*`, `&`, `[]`, and `()`).
+
+These built-in types are rich but deliberately low level, as they are intended to reflect the capabilities of conventional computer hardware. However, these built-in types don't provide the programmer with high-level facilities to conveniently write advanced applications.
+
+Instead, C++ augments the built-in types and operations with a set of *abstract mechanisms* out of which the programmer can build high-level facilities.
+
+Types built out of the built-in types using C++'s abstract mechanisms are called *user-defined types*. They are referred to as classes and enumerations.
+
+### 2.3.1 Structures
+
+The first step in building a new type is to organize its elements into a data structure:
+
+```cpp
+struct Vector {
+    int sz;
+    double* elem;
+};
+```
+A variable of type `Vector` can be declared like this:
+```cpp
+Vector v;
+```
+But this is not useful, as `v`'s `elem` pointer doesn't point to anything. To be useful, you must give it some elements to point to:
+```cpp
+void vector_init(Vector& v, int s)
+{
+    v.elem = new double[s]; // allocate an array of doubles
+    v.sz = s;
+}
+```
+
+- `v`'s `elem` member gets a pointer produced by the `new` operator and `v`'s `sz` member gets the number of elements in the array.
+- The `&`in `Vector&` indicates that we pass `v` by non-`const` reference; that way, `vector_init` can modify the vector passed to it.
+
+A simple use of `Vector` looks like this:
+```cpp
+double read_and_sum(int s)
+{
+    Vector v;
+    vector_init(v, s); // allocate s elements for v
+    for (int i=0; i != s; ++i)
+        cin >> v.elem[i]; // read into v.elem[i]
+    double sum = 0;
+    for (int i=0; i != s; ++i)
+        sum += v.elem[i]; // sum the elements
+    return sum;
+}
+```
+
+We use `.` (dot) to access `struct` members through a name (and through a reference) and `->` to access `struct` members through a pointer.
+```cpp
+void f(Vector v, Vector& rv, Vector* pv)
+{
+    int i1 = v.sz;  // accessing a member through a name
+    int i2 = rv.sz; // accessing a member through a reference
+    int i3 = pv->sz; // accessing a member through a pointer
+}
+```
+This means:
+- `v` is passed by value → a copy of a Vector object is made.
+- `rv` is passed by reference → no copy is made, it refers directly to the original Vector.
+- `pv` is passed by pointer → you receive a pointer to a Vector (you must dereference it to access members).
+
+| Parameter    | Access            | Copy? | Syntax   | Notes                                               |
+| :----------- | :---------------- | :---- | :------- | :-------------------------------------------------- |
+| `Vector v`   | Local copy        | Yes   | `v.sz`   | Changing `v` only changes the copy                  |
+| `Vector& rv` | Original object   | No    | `rv.sz`  | Changes affect the original                         |
+| `Vector* pv` | Pointer to object | No    | `pv->sz` | Changes affect the original (pointer must be valid) |
+
+### 2.3.2 Classes
+
+Structs and classes are similar in that they allow you to separate operations from data. Classes are more powerful than structs because they enable you to model a "real type". 
+
+A real type is a type that:
+- Hides its internal representation from users
+- Provides a clear, consistent interface
+- Allows safe future changes to how data is represented internally
+
+This is important because early in C and old C++ (pre-classes), a `struct` was just a simple **bag of public data** — no hiding, no safety, no real abstraction.
+
+A class is defined to have a set of *members*, which can be data, function, or type members.
+
+The interface is defined by the *public* members of the class, and *private* members are accessible only through the interface.
+
+```cpp
+class Vector {
+public:
+    Vector(int s) : elem{new double[s]}, sz{s} {}   // construct a Vector
+    double& operator[](int i) { return elem[i]; }   // element access: subscripting
+    int size() { return sz; }
+
+private:
+    double* elem;   // pointer to the elements
+    int sz;         // the number of elements
+};
+```
+
+You can define a variable of type `Vector` like this:
+```cpp
+Vector v(6);
+```
+
+In this sense, `Vector` is a "handle" containing a pointer to the elements (`elem`) and the size of the vector (`sz`). 
+
+```cpp
+#include <iostream>
+
+class Vector {
+public:
+    Vector(int s) : elem{new double[s]}, sz{s} {}   // construct a Vector
+    double& operator[](int i) { return elem[i]; }   // element access: subscripting
+    int size() { return sz; }
+
+private:
+    double* elem;   // pointer to the elements
+    int sz;         // the number of elements
+};
+
+double read_and_sum(int s)
+{
+    Vector v(s);
+    for (int i = 0; i != v.size(); ++i) {
+        std::cin >> v[i];
+    }
+    double sum = 0;
+    for (int i = 0; i != v.size(); ++i) {
+        sum += v[i];
+    }
+    return sum;
+}
+
+int main()
+{
+    std::cout << read_and_sum(5);
+}
+```
 **Note:**  
-- The body of this loop is empty because all the work is done in the `for` statement.
+- The constructor `Vector()` replaces the `vector_init()` function used in the previous example.
+- Unlike the `vector_init()` function, the constructor guarantees that the `Vector` object is fully initialized when it is created.
 
-#### 1.5.3 Line Counting 
+### 2.3.3 Enumerations
 
-The next program counts input lines.
+C++ supports a simple form of a user-defined type called an *enumeration*, which is a set of named integer constants.
 
-```c
-int main() {
-    int c, nl;
-    nl = 0;
-    while ((c = getchar()) != EOF)
-        if (c == '\n')
-            ++nl;
-    printf("%d\n", nl);
-}
+```cpp
+enum class Color { red, green, blue }; 
+enum class Traffic_light { red, yellow, green }; 
+Color col = Color::red;
+Traffic_light light = Traffic_light::red;
 ```
-[1_line_count.c](./ch01/line_counting/1_line_count.c)
-
-**Output:**  
-
-<img src="images/1746008322765.png" alt="alt text" width="350px">
-
 **Note:**  
-- A character written between single quotes is called a *character constant*.
-- A character constant represents an integer value equal to the numeric value of the character in the machine's character set.
-- In this example, `'\n'` is the newline character constant, which has a value of 10 in ASCII.
+- Enumerators (e.g., `red`) are in the scope of their `enum class`, so `Color::red` and `Traffic_light::red` can be different.
+- Enumerations are used to represent small sets of integer values and are intended to make code more readable and less error-prone instead of using plain integers.
+- The `class` after the `enum` prevents accidental misuses of constants:
 
-**Exercise 1-8**: Write a program to count blanks, tabs, and newlines.
-
-<details>
-<summary>My Solution</summary>
-
-```c
-int main() {
-    // Declare variables for character input and counters
-    int character, blanks, tabs, newlines;
-
-    // Initialize counters
-    blanks = tabs = newlines = 0;
-
-    // Process input and count blanks, tabs, and newlines
-    while((character = getchar()) != EOF) {
-        if (character == ' ')
-            blanks++;
-        if (character == '\t')
-            tabs++;
-        if (character == '\n')
-            newlines++;
-    }
-
-    // Output the results
-    printf("Here are the results: \n");
-    printf("Blanks: %d\n", blanks);
-    printf("Tabs: %d\n", tabs);
-    printf("Newlines: %d\n", newlines);
-}
+```cpp
+Color x = red; // error: which red?
+Color y = Traffic_light::red; // error: that red is not a Color
+Color z = Color::red; // OK: this red is a Color
 ```
-[`ex1_8_character_count.c`](./ch01/_exercises/ex1_8_character_count.c)
 
-**Output:**
+By default, an `enum class` has only assignment, initialization, and comparisons defined. However, you can define your own operators:
 
-<img src="images/1746009564114.png" alt="alt text" width="350px">
-
-</details>
-
-**Exercise 1-9:** Write a program to copy its input to its output, replacing each string of one or more blanks by a single blank.
-
-<details>
-<summary>My Solution</summary>
-
-```c
-#include <stdio.h>
-
-// Declare main function and variables for character input and blank counting
-int main() {
-    int c;
-    int blanks;
-
-    // Initialize blank counter and process input character by character
-    blanks = 0;
-    while ((c = getchar()) != EOF)
-    {
-        // Check for blank characters and count consecutive blanks
-        if (c == ' ') {
-            blanks++;
-        } else {
-            // Output a single blank if blanks were counted, then output the non-blank character and reset counter
-            if (blanks > 0) {
-                putchar(' ');
-            }
-            putchar(c);
-            blanks = 0;
-        }
+```cpp
+Traffic_light& operator++(Traffic_light& t)
+{
+    switch (t) {
+        case Traffic_light::green: return t  = Traffic_light::yellow;
+        case Traffic_light::yellow: return t = Traffic_light::red;
+        case Traffic_light::red: return t    = Traffic_light::green;
     }
 }
+
+Traffic_light next = ++light;
 ```
-[`ex1_9_squeeze_blanks.c`](./ch01/_exercises/ex1_9_squeeze_blanks.c)
 
-**Output:**
+## 2.4 Modularity
 
-<img src="images/1746011214329.png" alt="alt text" width="250px">
+A C++ program consists of functions, user-defined types, class hierarchies, and templates. The key to managing this is to define the interactions among those parts. The first and foremost step is to distinguish between the *interface* and its *implementation*.
 
-</details>
+A *declaration* specifies all that's needed to use a function or type:
 
+```cpp
+double sqrt(double);            // Declaration
 
-**Exercise 1-10:** Write a program to copy its input to its output, replacing each tab by \t, each backspace by \b, and each backslash by \\. This makes tabs and backspaces visible in an unambiguous way.
+class Vector {
+public:
+    Vector(int s);              // Declaration of constructor
+    double& operator[](int i);  // Declaration of subscript operator
+    int size();                 // Declaration of size function
+private:
+    double* elem;
+    int sz;
+};
+```
 
-<details>
-<summary>My Solution</summary>
+Elsewhere, you define the implementation: 
 
-```c
-#include <stdio.h>
+```cpp
+double sqrt(double d)
+{
+    // ..algorithm as found in math textbook..
+}
+
+Vector::Vector(int s) : elem{new double[s]}, sz{s}
+{
+}
+
+double& Vector::operator[](int i) // definition of subscript operator
+{
+    return elem[i];
+}
+
+int Vector::size()  // definition of size member function
+{
+    return sz;
+}
+```
+
+**Note:** You must define `Vector`'s functions, but not `sqrt()` because it is defined in the standard library.
+
+### 2.4.1 Separate Compilation
+
+Separate compilation is where user code sees only declarations of the types and functions used. The definitions are in separate source files and compiled separately. Such separation can be used to minimize compile times and to strictly enforce separation of logically distinct parts of a program (thus minimizing the chance of errors).
+
+A library is often a collection of separately compiled code fragments (e.g. functions).
+
+Typically, we place declarations that specify the interface to a module in a file with a name indicating its intended use:
+
+```cpp
+// Vector.h
+
+class Vector {
+public:
+    Vector(int s);
+    double& operator[](int i);
+    int size();
+private:
+    double* elem;
+    int sz;
+};
+```
+
+Then users will include that header file to access that interface:
+
+```cpp
+#include "Vector.h"     // get Vector's interface
+#include <cmath>        // get the standard-library math function interface including sqrt()
+using namespace std;    // makd std members visible
+
+double sqrt_sum(Vector& v)
+{
+    double sum = 0;
+    for (int i = 0; i != v.size(); ++i) 
+        sume += sqrt(v[i]);
+    return sum;
+}
+```
+
+The `.cpp` file providing the implementation of `Vector` will also include the `.h` file providing its interface:
+
+```cpp
+// Vector.cpp
+
+#include "Vector.h"     // get Vector's interface
+
+Vector::Vector(int s) : elem{new double[s]}, sz{s}
+{
+}
+
+double& Vector::operator[](int i)
+{
+    return elem[i];
+}
+
+int Vector::size()
+{
+    return sz;
+}
+```
+
+Here's how the code fragments work together:
+
+![](./images/20250524-codeseparation.svg)
+
+Code separation is very important. The best approach is to maximize modularity, represent that modularity logically through language features, and then exploit the modularity through files for effective separate compilation.
+
+### 2.4.2 Namespaces
+
+Namespaces are a mechanism for expressing that some declarations belong together and that their names shouldn't clash with other names.
+
+```cpp
+namespace My_code {
+    class complex { /* ... */ };
+    complex sqrt(complex);
+    // ...
+    int main(); // scoped to My_code namespace
+}
+
+int My_code::main()
+{
+    complex z{1, 2};
+    auto z2 = sqrt(z);
+    std::cout << '{' << z2.real() << ',' << z2.imag() << "}\n";
+    // ...
+};
 
 int main()
 {
-    int character;
-
-    /* Process input characters until EOF is encountered */
-    while ((character = getchar()) != EOF)
-    {
-        /* Handle tab character */
-        if (character == '\t')
-        {
-            putchar('\\');
-            putchar('t');
-        }
-        /* Handle backspace character */
-        else if (character == '\b')
-        {
-            putchar('\\');
-            putchar('b');
-        }
-        /* Handle backslash character */
-        else if (character == '\\')
-        {
-            putchar('\\');
-            putchar('\\');
-        }
-        /* Output all other characters without modification */
-        else
-        {
-            putchar(character);
-        }
-    }
+    return My_code::main();  // Qualifying the call to My_code's main function
 }
 ```
-[`ex1-10.c`](./ch01/_exercises/ex1-10.c)
 
-**Output:**  
+To gain access to the names in a namespace, you can use the `using` directive:
 
-Confirm by echoing a string with tabs and backspaces:  
+```cpp
+using namespace My_code;
+```
 
-<img src="images/1746780630889.png" alt="alt text" width="550px">
+### 2.4.3 Error Handling
 
-Then send the string to a text file and pipe it to the program:
+One effect of this modularity and the use of libraries is that the point where a run-time error can be detected is separated from the point where it can be handled.
 
-<img src="images/1746780948634.png" alt="alt text" width="550px">
+#### 2.4.3.1 Exceptions
 
-**Note:** The program prints backspaces, tabs, and backslashes as `\b`, `\t`, and `\\` respectively. 
+What ought to be done when an error occurs?
+- The writer/implementer doesn't know what the user would like to have done.
+- The user cannot consistently detect the problem.
 
-</details>
+The solution is to detect the error and then transfer control to a handler that can deal with the error:
 
-#### 1.5.4 Word Counting
-
-The following program is a bare-bones version of the UNIX program `wc` (word count). 
-
-```c
-#include <stdio.h>
-
-#define IN 1  /* inside a word */
-#define OUT 0 /* outside a word */
-
-/* count lines, words, and characters in input */
-
-int main()
+```cpp
+double& Vector::operator[](int i)
 {
-    int c, nl, nw, nc, state;
-
-    state = OUT;
-    nl = nw = nc = 0;
-
-    while ((c = getchar()) != EOF)
-    {
-        ++nc;
-        if (c == '\n')
-        {
-            ++nl;
-        }
-        if (c == ' ' || c == '\n' || c == '\t')     // Evaluates left to right. Stops as soon as truth or falsehood is known.
-        {
-            state = OUT;
-        } else if (state == OUT)
-        {
-            state = IN;
-            ++nw;
-        }
-    }
-    printf("%d %d %d\n", nl, nw, nc);
+    if (i < 0 || size() <= i) throw out_of_range{"Vector::operator[]"};
+    return elem[i];
 }
 ```
-[`word_count.c`](./ch01/word_counting/word_count.c)
 
-```bash
-echo "This is the first line of text." > lines.txt
-echo "Counting words can be very useful." >> lines.txt
-echo "Each sentence should be on its own line." >> lines.txt
-echo "Word count tools help analyze text easily." >> lines.txt
-echo "How many words are in this line?" >> lines.txt
+The `throw` transfers control to a handler for exceptions of type `out_of_range` in some function that directly or indirectly called `Vector::operator[]`.
 
-cat lines.txt | ./word_count
-```
-**Output:** First column is the number of lines, second is the number of words, and third is the number of characters.
-<img src="images/1746782932605.png" alt="alt text" width="550px">
+The implementation unwinds the function call stack as needed to get back to the context of that caller:
 
-**Exercise 1-11:** How would you test the word count program? What kinds of input are most likely to uncover bugs if there are any?
-
-Use a text file and pipe it to the program. Test with:
-- Empty lines
-- Lines with only whitespace
-- Lines with a mix of tabs, spaces, and newlines
-- Very long lines
-- Unicode characters
-
-**Exercise 1-12:** Write a program that prints its input one word per line.
-
-```c
-int main()
+```cpp
+void f(Vector& v)
 {
-    int c;
-
-    // Read characters until EOF and print each word on a new line.
-    while ((c = getchar()) != EOF) {
-        if (c == ' ' || c == '\t') {
-            putchar('\n');
-        }
-        else if (c == '\n') {
-            // No action needed for newlines
-        }
-        else if (c == '.') {
-            putchar('\n');
-            putchar(c);
-        }
-        else {
-            putchar(c);
-        }
+    // ...
+    try { // exceptions are handled by the handler defined below
+        v[v.size()] = 7; // try to access beyond the end of v
     }
+    catch (out_of_range& e) { // oops: out_of_range error
+        // ... handle range error ...
+    }
+    // ...
 }
 ```
-[`echo_input.c`](/books/the_c_programming_language/ch01/word_counting/ex1-12/echo_input.c)
 
-<img src="images/1747906023996.png" alt="alt text" width="550px">
+The `out_of_range` type is defined in the standard library (in `<stdexcept>`).
 
-<img src="images/1751191169739.png" alt="alt text" width="300px">
+#### 2.4.3.2 Invariants
 
+An *invariant* is a condition that is always true at a particular point in a program.
 
-### 1.6 Arrays
+It is the job of a constructor to establish the invariant for its class (so that the member functions can rely on it) and for the member functions to make sure the invariant holds when they exit.
 
-The following program counts the number of occurrences of each digit, whitespace character (blank, tab, newline), and all other characters.
+```cpp
+Vector v(-27);  // will cause chaos because the invariant is not established
+```
 
-```c
-#include <stdio.h>
-
-int main()
+```cpp
+Vector::Vector(int s)
 {
-    int c, i, nwhite, nother;
-    int ndigit[10];
-
-    // Initialize counters
-    nwhite = nother = 0;
-
-    // Initialize digit count array
-    for (i = 0; i < 10; i++)
-        ndigit[i] = 0;
-
-    // Process input characters
-    while ((c = getchar()) != EOF)
-        if (c >= '0' && c <= '9')
-            ++ndigit[c - '0'];
-        else if (c == ' ' || c == '\n' || c == '\t')
-            ++nwhite;
-        else
-            ++nother;
-
-    // Output results
-    printf("digits = ");
-    for (i = 0; i < 10; i++)
-        printf(" %d", ndigit[i]);
-    printf(", whitespace = %d, other = %d\n", nwhite, nother);
+    if (s < 0) throw length_error{};    // establish the invariant
+    elem = new double[s];
+    sz = s;
 }
 ```
-[`count_occurrences.c`](./ch01/arrays/count_occurrences.c)
 
-<img src="images/1751193129386.png" alt="alt text" width="550px">
-
-<img src="images/1751193157171.png" alt="alt text" width="550px">
-
-**Note:** By definition, chars are just small integers, so char variables and constants are identical ints in arithmetic expressions.
-
-**Exercise 1-13:** Write a program to print a histogram of the lengths of words in its input. It is easy to draw the histogram with the bars horizontal; a vertical orientation is more challenging.
-
-```c
-/*
-    Program: Word Length Histogram
-    Author: Greg Tate
-    Date: 2025-08-03
-    Context: The C Programming Language, Chapter 1, Arrays, Exercise 1-13
-*/
-
-int main()
+```cpp
+void test()
 {
-    int c, word_length;
-    int max_word_length;
-
-    max_word_length = 20;
-    int word_length_array[max_word_length + 1];
-
-    // Initialize the word length array to zero
-    for (int i = 0; i < (max_word_length + 1); i++)
-        word_length_array[i] = 0;
-
-    // Read input and count word lengths
-    word_length = 0;
-    while ((c = getchar()) != EOF) {
-        // Check if character is part of a word
-        if (c != ' ' && c != '\n' && c != '\t') {
-            word_length++;
-        }
-        else {
-            // Word boundary reached; update histogram and reset word length
-            word_length_array[word_length]++;
-            word_length = 0;
-        }
+    // Make sure the invariant holds
+    try {
+        Vector v(-27);
     }
-
-    // Print the word length histogram
-    printf("Word Length Histogram:\n");
-    for (int i = 1; i < (max_word_length + 1); i++) {
-        // Print word length label
-        if (i < 10) { printf("%d: ", i); } else { printf("%d:", i); }
-        // Print histogram bars for each word length
-        for (int j = 1; j <= word_length_array[i]; j++) {
-            putchar('|');
-        }
-        printf("\n");
+    catch (std::length_error) {
+        // handle negative size
+    }
+    catch (std::bad_alloc) {    // if `new` can't find memory to allocate `length_error`
+        // handle memory exhaustion
     }
 }
 ```
-```bash
-cat testfile.txt | ./histogram_lengths    
-Word Length Histogram:
-1: ||||||||
-2: |||||||||||||||
-3: ||||||||||||||
-4: |||||||||||||
-5: ||||||||||||||||||
-6: ||||||||||||||
-7: |||||||||||
-8: |||
-9: ||||||
-10:||
-11:|
-12:|
-13:|
-14:
-15:|
-16:
-17:
-18:
-19:|
-20:
+
+The notion of invariants is central to the design of classes, and preconditions serve a similar role in the design of functions. Invariants
+- help us to understand precisely what we want
+- force us to be specific; that gives us a better chance of getting our code correct
+
+#### 2.4.3.3 Static Assertions
+
+Exceptions report errors at run time. However, you can use static assertions to perform simple checks on other properties at compile time:
+
+```cpp
+satic_assert(4 <= sizeof(int), "integers are too small");       // check integer size
 ```
 
-**Exercise 1-14:** Write a program to print a histogram of the frequencies of different characters in its input.
+This will write a compile-time error if an `int` on this system does not have at least 4 bytes.
 
-```c
-/*
-Program: Histogram of ASCII Character Frequencies
-Author: Greg Tate
-Date: 2025-08-04
-Context: The C Programming Language, Chapter 1, Exercise 1-14
-Purpose: Reads input and prints a histogram of frequencies for printable ASCII characters.
-*/
+The `static_assert` mechanism can be used for anything that can be expressed in a constent expression.
 
-#include <stdio.h>
+```cpp
+constexpr double C = 299792.458         // km/s
 
-// Note: ASCII printable characters are from 32 - 127
-#define ASCII_OFFSET 32
-
-int main()
+void f(double speed)
 {
-    int c;
-
-    // Declare array size and frequency array for ASCII printable characters
-    int char_arraysize = 127 - ASCII_OFFSET;
-    int char_frequency[char_arraysize];
-
-    // Initialize ASCII character frequency array
-    for (int i = 0; i < char_arraysize; i++) {
-        char_frequency[i] = 0;
-    }
-
-    // Read input and count frequency of each printable ASCII character
-    while ((c = getchar()) != EOF) {
-        // Skip non-printable ASCII characters
-        if (c < 32 || c > 127) { continue; }
-        // Increment frequency for the corresponding character
-        char_frequency[c - ASCII_OFFSET]++;
-    }
-
-    // Print histogram header
-    printf("Character frequency histogram:\n");
-
-    // Print each printable ASCII character in the histogram
-    for (int i = 0; i < char_arraysize; i++) {
-        // Skip characters with zero frequency
-        if (char_frequency[i] == 0) { continue; }
-        // Print character and its frequency as histogram bars
-        putchar(i + ASCII_OFFSET);
-        printf(": ");
-        for (int j = 0; j < char_frequency[i]; j++) { putchar('|'); }
-        printf("\n");
-    }
-}
-```
-[histogram_frequencies.c](./ch01/arrays/exercises/1-14/histogram_frequencies.c)
-```bash
-echo 'Hello, World!' | ./histogram_frequencies 
-Character frequency histogram:
- : |
-!: |
-,: |
-H: |
-W: |
-d: |
-e: |
-l: |||
-o: ||
-r: |
-```
-
-### 1.7 Functions
-
-Functions provide a way to encapsulate some computation, which can then be used without worrying about its implementation. 
-
-With properly designed functions, it is possible to ignore *how* a job is done; knowing *what* is done is sufficient.
-
-The following code demonstrates a simple function that calculates the power of a number:
-
-```c
-#include <stdio.h>
-
-// Function declaration, also known as a function prototype
-int power(int m, int n);
-
-int main()
-{
-    int i;
-    for (i = 0; i < 10; ++i) {
-        printf("%d %d %d\n", i, power(2, i), power(-3, i));
-    }
-    return 0;
-}
-
-// Function definition: return-type  function-name(parameter declarations, if any)
-int power(int base, int n)
-{
-    int i, p;
-    p = 1;
-    for (i = 1; i <= n; ++i) {
-        p = p * base;
-    }
-    return p;
-}
-```
-```bash
-./power 
-0 1 1
-1 2 -3
-2 4 9
-3 8 -27
-4 16 81
-5 32 -243
-6 64 729
-7 128 -2187
-8 256 6561
-9 512 -19683
-```
-
-We generally use *parameter* for a variable named in the parenthesized list in a function definition, and *argument* for a value passed to a function when it is called.
-
-The function declaration must agree with the function definition; otherwise, the compiler will issue a warning or error.
-
-Parameter names within the function declaration are optional. You can write the declaration as:
-
-```c
-int power(int, int);
-```
-
-Prior to ANSI C, the original C language did not require function declarations:
-
-```c
-int power();                        // No parameter list was permitted in the declaration
-
-// main () {}
-
-power(base, n)
-int base, n;                        // Parameter types declared before the opening brace in original C
-{
-    int i, p;
-    p = 1;
-    for (i = 1; i <= n; ++i)
-        p = p * base;
-    return p;
+    const double local_max = 160.0 / (60 * 60)          // 160 km/h ==160.0/(60*60) km/s     
+    static_assert(speed < C, "can't go that fast");         // error: speed must be a constant
+    static_assert(local_max < C, "can't go that fast");         // OK
+    // ...
 }
 ```
 
-The introduction of function declarations with parameter types in ANSI C made it much easier for the compiler to detect errors in the number of arguments or their types.
+In general, `static_assert(A,S)` prints `S` as a compiler error message if `A` is not `true`.
 
-**Exercise 1-15:** Rewrite the temperature conversion program of Section 1.2 using a function for conversion.
+The most important uses of `static_assert` come when making assertions about types used as parameters in generic programming. 
 
-```c
-/*
-Program: Fahrenheit to Celsius Table (Function Version)
-Author: Greg Tate
-Date: 2025-08-05
-Context: The C Programming Language, Chapter 1, Exercise 1-15
-*/
+## 2.6 Advice
 
-#include <stdio.h>
-
-// Function prototype for temperature conversion table
-int convert_temp(int lower, int upper, int step);
-
-int main()
-{
-    // Call function to print Fahrenheit-Celsius table
-    convert_temp(0,300, 20);
-}
-
-int convert_temp(int lower, int upper, int step)
-{
-    int fahr;
-    // Loop to print Fahrenheit and Celsius values for each step
-    for (fahr = lower; fahr <= upper; fahr += step)
-    {
-        printf("%3d %6.1f\n", fahr, (5.0 / 9.0) * (fahr - 32));
-    }
-    return 0;
-}
-```
-```bash
-% ./temp                                                          
-  0  -17.8
- 20   -6.7
- 40    4.4
- 60   15.6
- 80   26.7
-100   37.8
-120   48.9
-140   60.0
-160   71.1
-180   82.2
-200   93.3
-220  104.4
-240  115.6
-260  126.7
-280  137.8
-300  148.9
-```
-
-### 1.8 Arguments&mdash;Call by Value
-
-In C, all function arguments are passed "by value", meaning the called function is given the values of its argumentsin temporary variables rather than the originals.
-
-This leads to some different properties than are seen with "call by reference" languages, like Fortran or Pascal, where the called routine has access to the original arugment, not a local copy.
-
-The main distinction is that in C the called function cannot directly alter a variable in the calling function; it can only alter its private, temporary copy.
-
-Call by value usually leads to more compact programs with fewer extraneous variables, because parameters can be treated as conveniently initialized local variables in the called routine.
-
-```c
-int power(int base, int n)                  // n is used as a temporary variable
-{
-    int p;
-    for (p = 1; n > 0; --n) {               // whatever is done to n doesn't affect the argument that power was originally called with
-        p = p * base;
-    }
-    return p;
-}
-```
-
-When necessary, it is possible to modify a variable in a calling routine. The caller must provide the *address* of the variable to be set (technically, a pointer to the variable), and the called function must declare the parameter to be a pointer and access the memory directly through it. 
-
-The story is different for arrays. When the name of an array is used as an argument, the value passed to the function is the location or address of the beginning of the array&mdash;there is no copying of array elements. 
-
-### 1.9 Character Arrays
-
-The array of characters is the most common type of array in C.
-
-The following program prints the longest line from the input:
-
-```c
-
-
-```
+1. Don't panic! All will become clear in time.
+2. You don't have to know every detail of C++ to write good programs.
+3. Focus on programming techniques, not on language features.
