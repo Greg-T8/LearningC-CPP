@@ -177,9 +177,7 @@ char* p = &v[3]; // p points to the 4th element of v
 char x = *p;     // *p is the object that p points to
 ```
 
-In an expression, prefix unary `*` means "contents of" and prefix unary `&` means "address of". This can be illustrated with the following example:
-
-![](./images/20250501-ch02-pointer_reference.svg)
+In an expression, prefix unary `*` means "contents of" and prefix unary `&` means "address of".
 
 The following code copies ten elements from one array to another:
 ```cpp
@@ -537,7 +535,7 @@ int Vector::size()
 
 Here's how the code fragments work together:
 
-![](./images/20250524-codeseparation.svg)
+![](../../images/20250524-codeseparation.svg)
 
 Code separation is very important. The best approach is to maximize modularity, represent that modularity logically through language features, and then exploit the modularity through files for effective separate compilation.
 
