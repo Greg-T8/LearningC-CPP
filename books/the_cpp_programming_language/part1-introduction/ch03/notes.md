@@ -5,6 +5,7 @@
   - [3.2.1 Concrete Types](#321-concrete-types)
     - [3.2.1.1 An Arithmetic Type](#3211-an-arithmetic-type)
     - [3.2.1.2 A Container](#3212-a-container)
+    - [3.2.1.3 Initializing Containers](#3213-initializing-containers)
 
 ## 3.1 Introduction
 
@@ -126,13 +127,10 @@ public:
     }
     ~Vector() { delete[] elem; }                        // destructor: free memory
 
-    double& operator[](int i);                          // & returns a reference to the i-th element. A reference
+    double& operator[](int i);                          // & returns a reference to the i-th element. (Without a reference, it would return a copy, which is not useful for assignment.)
     int size() const;
 };
 ```
-
-> Tomorrow:  circle back to double& above
-
 A destructor’s name is the class name prefixed with `~`. It complements the constructor: the constructor allocates memory on the free store (heap), and the destructor frees it. Users of Vector don’t manage this directly; they just create and use objects as with built-in types.
 
 ```cpp
@@ -150,4 +148,56 @@ void fct(int n)
 
 Vector follows the same rules of naming, scope, allocation, and lifetime as built-in types like int or char (§6.4). Error handling has been omitted here (§2.4.3).
 
-The constructor/destructor pair is central to many C++ techniques. This pattern, Resource Acquisition Is Initialization (RAII), ensures resources are acquired in a constructor and released in a destructor. It prevents “naked new” and “naked delete” in user code, keeping memory management inside well-designed abstractions. This reduces errors and helps avoid resource leaks (§5.2, §13.3).
+The constructor/destructor pair is central to many C++ techniques. This pattern, **Resource Acquisition Is Initialization (RAII)**, ensures resources are acquired in a constructor and released in a destructor. It prevents “naked new” and “naked delete” in user code, keeping memory management inside well-designed abstractions. This reduces errors and helps avoid resource leaks (§5.2, §13.3).
+
+
+#### 3.2.1.3 Initializing Containers
+
+A container is meant to hold elements, so we need simple ways to add them. One option is to create a Vector with a fixed size and then assign values, but there are more elegant approaches. Two common ones are:
+
+• Initializer-list constructor: lets you initialize a Vector with a list of elements.
+• push\_back(): adds a new element to the end of the sequence.
+
+Example declarations:
+
+```cpp
+class Vector {
+public:
+    Vector(std::initializer_list<double>);     // initialize with a list
+    void push_back(double);                    // add element at end, increasing size by one
+    // ...
+};
+```
+
+The push\_back() function is useful when the number of elements is not known in advance.
+
+```cpp
+Vector read(istream& is)
+{
+    Vector v;
+    for (double d; is >> d;)       // read floating-point values into d
+        v.push_back(d);            // add d to v
+    return v;
+}
+```
+
+The loop stops at end-of-file or on a formatting error. Until then, each number is added to v, so its size matches the number of elements read. A for-loop is used to limit the scope of d to the loop.
+
+Efficient return of large Vectors from read() relies on a move constructor (see §3.3.2). The initializer-list constructor relies on std::initializer\_list, a compiler-supported standard type. When you write something like `{1,2,3,4}`, the compiler creates an initializer\_list object.
+
+Examples:
+
+```cpp
+Vector v1 = {1,2,3,4,5};        // v1 has 5 elements
+Vector v2 = {1.23, 3.45, 6.7, 8};  // v2 has 4 elements
+```
+
+A possible implementation of the initializer-list constructor:
+
+```cpp
+Vector::Vector(std::initializer_list<double> lst)
+    : elem{new double[lst.size()]}, sz{static_cast<int>(lst.size())}
+{
+    copy(lst.begin(), lst.end(), elem);    // copy elements from lst into elem
+}
+```
