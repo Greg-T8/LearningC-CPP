@@ -7,6 +7,8 @@
     - [3.2.1.2 A Container](#3212-a-container)
     - [3.2.1.3 Initializing Containers](#3213-initializing-containers)
   - [3.2.2 Abstract Types](#322-abstract-types)
+  - [3.2.3 Virtual Functions](#323-virtual-functions)
+  - [3.2.4 Class Hierarchies](#324-class-hierarchies)
 
 ## 3.1 Introduction
 
@@ -206,7 +208,7 @@ Vector::Vector(std::initializer_list<double> lst)
 
 ### 3.2.2 Abstract Types
 
-Types like complex and Vector are called concrete types because their representation is part of their definition, similar to built-in types. An abstract type, in contrast, hides all implementation details. To achieve this, the interface is separated from the representation, and objects are allocated on the free store and accessed through references or pointers.
+Types like complex and Vector are called concrete types because their representation is part of their definition, similar to built-in types. An abstract type, in contrast, hides all implementation details. To achieve this, the interface is separated from the representation, and objects are allocated on the free store, i.e. the pool of memory you get when using `new` / `delete`, and accessed through references or pointers.
 
 Here is an abstract interface for a container:
 
@@ -256,7 +258,7 @@ Example:
 ```cpp
 void g()
 {
-    Vector_container vc(10);   // ten elements
+    Vector_container vc(10);        // ten elements
     use(vc);
 }
 ```
@@ -265,10 +267,10 @@ Because use() only knows the Container interface, it will also work with other i
 
 ```cpp
 class List_container : public Container {
-    std::list<double> ld;   // standard-library list of doubles
+    std::list<double> ld;                                       // standard-library list of doubles
 public:
     List_container() {}
-    List_container(initializer_list<double> il) : ld{il} {}
+    List_container(initializer_list<double> il) : ld{il} {}    // using initializer_list to initialize the list
     ~List_container() {}
     double& operator[](int i);
     int size() const { return ld.size(); }
@@ -294,4 +296,32 @@ void h()
 }
 ```
 
-The function use() works equally with Vector\_container, List\_container, or any other class derived from Container. It relies only on the interface, not the implementation. This flexibility means code doesn’t need recompilation when a new derived class is added, but it also requires objects to be used through references or pointers.
+The function use() works equally with Vector\_container, List\_container, or any other class derived from Container. It relies only on the interface, not the implementation. This flexibility means code doesn’t need recompilation when a new derived class is added, but it also requires objects to be used through references or pointers. Reason for this is abstract types cannot be instantiated directly, so you cannot create a Container object. Instead, you create objects of derived classes and use them through pointers or references to the base class.
+
+### 3.2.3 Virtual Functions
+
+In the function
+
+```cpp
+void use(Container& c)
+{
+    const int sz = c.size();
+    for (int i = 0; i != sz; ++i)
+        cout << c[i] << '\n';
+}
+```
+
+the expression `c[i]` must resolve to the correct implementation of `operator[]()`. If use() is called from h(), then `List_container::operator[]()` should run. If it is called from g(), then `Vector_container::operator[]()` should run.
+
+This works because every object of a class with virtual functions carries information that allows the program to select the right function at runtime. The common implementation technique is the **virtual function table** (vtbl).
+
+Each class with virtual functions has its own vtbl, which stores pointers to its virtual functions. Each object of such a class contains a hidden pointer to its class’s vtbl. When a virtual function is called, the compiler translates the function name into an index lookup in the vtbl. The correct function pointer is then called, even if the caller does not know the object’s exact type.
+
+This setup allows polymorphic behavior while keeping overhead low. The cost is:
+
+* One extra pointer stored in each object of a class with virtual functions.
+* One vtbl per such class.
+
+Runtime performance of a virtual function call is close to that of a regular function call—typically within about 25%.
+
+### 3.2.4 Class Hierarchies
