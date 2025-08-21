@@ -6,6 +6,7 @@
     - [3.2.1.1 An Arithmetic Type](#3211-an-arithmetic-type)
     - [3.2.1.2 A Container](#3212-a-container)
     - [3.2.1.3 Initializing Containers](#3213-initializing-containers)
+  - [3.2.2 Abstract Types](#322-abstract-types)
 
 ## 3.1 Introduction
 
@@ -121,7 +122,8 @@ private:
     double* elem;                                       // points to an array of sz doubles
     int sz;
 public:
-    Vector(int s) : elem{new double[s]}, sz{s}          // constructor: acquire memory. new double returns a pointer to the first element of the array
+    // Uses an initializer list to initialize elem and sz before the body executes
+    Vector(int s) : elem{new double[s]}, sz{s}          // constructor: acquire memory. 
     {
         for (int i = 0; i != s; ++i) elem[i] = 0;       // initialize elements
     }
@@ -155,8 +157,8 @@ The constructor/destructor pair is central to many C++ techniques. This pattern,
 
 A container is meant to hold elements, so we need simple ways to add them. One option is to create a Vector with a fixed size and then assign values, but there are more elegant approaches. Two common ones are:
 
-• Initializer-list constructor: lets you initialize a Vector with a list of elements.
-• push\_back(): adds a new element to the end of the sequence.
+- **Initializer-list constructor:** lets you initialize a Vector with a list of elements.
+- **push\_back():** adds a new element to the end of the sequence.
 
 Example declarations:
 
@@ -169,10 +171,10 @@ public:
 };
 ```
 
-The push\_back() function is useful when the number of elements is not known in advance.
+The `push_back()` function is useful when the number of elements is not known in advance.
 
 ```cpp
-Vector read(istream& is)
+Vector read(istream& is)            // is stands for input stream
 {
     Vector v;
     for (double d; is >> d;)       // read floating-point values into d
@@ -183,13 +185,13 @@ Vector read(istream& is)
 
 The loop stops at end-of-file or on a formatting error. Until then, each number is added to v, so its size matches the number of elements read. A for-loop is used to limit the scope of d to the loop.
 
-Efficient return of large Vectors from read() relies on a move constructor (see §3.3.2). The initializer-list constructor relies on std::initializer\_list, a compiler-supported standard type. When you write something like `{1,2,3,4}`, the compiler creates an initializer\_list object.
+Efficient return of large Vectors from **read()** relies on a move constructor (see §3.3.2). The initializer-list constructor relies on std::initializer\_list, a compiler-supported standard type. When you write something like `{1,2,3,4}`, the compiler creates an initializer\_list object.
 
 Examples:
 
 ```cpp
-Vector v1 = {1,2,3,4,5};        // v1 has 5 elements
-Vector v2 = {1.23, 3.45, 6.7, 8};  // v2 has 4 elements
+Vector v1 = {1,2,3,4,5};            // v1 has 5 elements. Uses std::initializer_list
+Vector v2 = {1.23, 3.45, 6.7, 8};   // v2 has 4 elements
 ```
 
 A possible implementation of the initializer-list constructor:
@@ -201,3 +203,95 @@ Vector::Vector(std::initializer_list<double> lst)
     copy(lst.begin(), lst.end(), elem);    // copy elements from lst into elem
 }
 ```
+
+### 3.2.2 Abstract Types
+
+Types like complex and Vector are called concrete types because their representation is part of their definition, similar to built-in types. An abstract type, in contrast, hides all implementation details. To achieve this, the interface is separated from the representation, and objects are allocated on the free store and accessed through references or pointers.
+
+Here is an abstract interface for a container:
+
+```cpp
+class Container {
+public:
+    virtual double& operator[](int) = 0;   // pure virtual function
+    virtual int size() const = 0;          // const member function
+    virtual ~Container() {}                // virtual destructor
+};
+```
+
+This class defines an interface only. The keyword virtual means a function can be redefined in a derived class. A pure virtual function (`=0`) must be implemented by a derived class. Because of that, you cannot create objects of type Container directly. A class with at least one pure virtual function is called an abstract class.
+
+Example use:
+
+```cpp
+void use(Container& c)
+{
+    const int sz = c.size();
+    for (int i = 0; i != sz; ++i)
+        cout << c[i] << '\n';
+}
+```
+
+The function use() works with any class derived from Container. It calls size() and operator\[] without knowing the underlying implementation. A type like this, which allows many implementations behind one interface, is called polymorphic.
+
+Abstract classes usually don’t have constructors since they hold no data, but they almost always have virtual destructors. This ensures proper cleanup when deleting an object through a base-class pointer.
+
+A concrete implementation can use Vector:
+
+```cpp
+class Vector_container : public Container {   // implements Container
+    Vector v;
+public:
+    Vector_container(int s) : v(s) {}        // Vector with s elements
+    ~Vector_container() {}
+    double& operator[](int i) { return v[i]; }
+    int size() const { return v.size(); }
+};
+```
+
+Here, Vector\_container inherits from Container. The derived class overrides operator\[] and size(), as well as the destructor. The Vector member is automatically destroyed when Vector\_container’s destructor runs.
+
+Example:
+
+```cpp
+void g()
+{
+    Vector_container vc(10);   // ten elements
+    use(vc);
+}
+```
+
+Because use() only knows the Container interface, it will also work with other implementations. For example:
+
+```cpp
+class List_container : public Container {
+    std::list<double> ld;   // standard-library list of doubles
+public:
+    List_container() {}
+    List_container(initializer_list<double> il) : ld{il} {}
+    ~List_container() {}
+    double& operator[](int i);
+    int size() const { return ld.size(); }
+};
+
+double& List_container::operator[](int i)
+{
+    for (auto& x : ld) {
+        if (i == 0) return x;
+        --i;
+    }
+    throw out_of_range("List container");
+}
+```
+
+Here the representation is a std::list<double>. Subscript access on a list is inefficient, but this example demonstrates how different implementations can still share the same interface.
+
+```cpp
+void h()
+{
+    List_container lc = {1,2,3,4,5,6,7,8,9};
+    use(lc);
+}
+```
+
+The function use() works equally with Vector\_container, List\_container, or any other class derived from Container. It relies only on the interface, not the implementation. This flexibility means code doesn’t need recompilation when a new derived class is added, but it also requires objects to be used through references or pointers.
