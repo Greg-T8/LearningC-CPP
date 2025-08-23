@@ -603,11 +603,11 @@ Vector operator+(const Vector& a, const Vector& b)
     if (a.size() != b.size())
         throw Vector_size_mismatch{};
 
-    Vector res(a.size());
+    Vector res(a.size());                       // res stands for result
     for (int i = 0; i != a.size(); ++i)
         res[i] = a[i] + b[i];
 
-    return res;   // local result is returned
+    return res;   // local result (a copy) is returned
 }
 ```
 
@@ -617,7 +617,7 @@ Here, `res` is copied when returned. If we write:
 void f(const Vector& x, const Vector& y, const Vector& z)
 {
     Vector r;
-    r = x + y + z;
+    r = x + y + z;          // at least two Vector copies occur, which is wasteful
 }
 ```
 
@@ -631,7 +631,7 @@ class Vector {
     Vector(const Vector& a);            // copy constructor
     Vector& operator=(const Vector& a); // copy assignment
 
-    Vector(Vector&& a);                 // move constructor
+    Vector(Vector&& a);                 // move constructor. Note use of &&.
     Vector& operator=(Vector&& a);      // move assignment
 };
 ```
@@ -639,7 +639,7 @@ class Vector {
 The move constructor simply transfers ownership of the resource:
 
 ```cpp
-Vector::Vector(Vector&& a)
+Vector::Vector(Vector&& a)              // Use of &&, which denotes an rvalue reference
     : elem{a.elem}, sz{a.sz}
 {
     a.elem = nullptr;   // leave source empty
@@ -648,6 +648,23 @@ Vector::Vector(Vector&& a)
 ```
 
 Here, `&&` denotes an *rvalue reference*, which can bind to temporary objects. That allows us to “steal” the resource from objects that won’t be used again. In `operator+`, the local `res` is such a temporary, so returning it triggers a move rather than a copy.
+
+-----
+**What `&&` means**
+
+`Vector&&` a is an rvalue reference.
+
+An rvalue is something you can’t take the address of easily or that doesn’t have a stable name — e.g., a temporary object like `Vector{10}`.
+
+By contrast, an lvalue is something with a name and storage — e.g., `Vector v(10)`;.
+
+So:
+
+`Vector(Vector& a)` → takes an lvalue reference (used in copy constructor).
+
+`Vector(Vector&& a)` → takes an rvalue reference (used in move constructor).
+
+-----
 
 A move constructor must not take a `const` argument because it modifies the source (by emptying it). Move assignment is defined in the same style: release the old resource, steal from the source, and leave the source in a safe, destructible state.
 
@@ -668,4 +685,3 @@ Vector f()
 ```
 
 `std::move` converts its argument into an rvalue reference, signaling that it can be safely moved from. After a move, the source object is empty but valid, so its destructor can run normally and it can even be reassigned later.
-
