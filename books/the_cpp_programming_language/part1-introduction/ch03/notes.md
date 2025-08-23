@@ -12,6 +12,9 @@
 - [3.3 Copy and Move](#33-copy-and-move)
   - [3.3.1 Copying Containers](#331-copying-containers)
   - [3.3.2 Moving Containers](#332-moving-containers)
+  - [3.3.3 Resource Management](#333-resource-management)
+  - [3.3.4 Suppressing Operations](#334-suppressing-operations)
+- [3.4 Templates](#34-templates)
 
 ## 3.1 Introduction
 
@@ -685,3 +688,63 @@ Vector f()
 ```
 
 `std::move` converts its argument into an rvalue reference, signaling that it can be safely moved from. After a move, the source object is empty but valid, so its destructor can run normally and it can even be reassigned later.
+
+<img src='images/1755937760832.png' width=500>
+
+### 3.3.3 Resource Management
+
+By defining constructors, copy operations, move operations, and a destructor, we gain full control over how a class manages its resources. The move constructor in particular allows objects to be transferred between scopes efficiently, without unnecessary copying. This is essential when working with objects that cannot be copied (like `std::thread`) or are too expensive to copy (like a `Vector` with millions of elements).
+
+```cpp
+std::vector<std::thread> my_threads;
+
+Vector init(int n)
+{
+    std::thread t {heartbeat};             // run heartbeat concurrently
+    my_threads.push_back(std::move(t));    // move t into my_threads
+    //...more initialization...
+
+    Vector vec(n);
+    for (int i = 0; i < vec.size(); ++i)
+        vec[i] = 777;
+    return vec;                             // The return steals vec's resources using Vector(Vector&&)
+}
+
+auto v = init(1'000'000);  // start heartbeat and initialize v
+```
+
+Here, `std::move` allows the thread to be transferred into the vector without copying, and `vec` is moved out of the function instead of copied.
+
+Classes like `Vector` and `thread` are resource handles—they manage ownership of a resource and ensure its proper cleanup. Smart pointers such as `std::unique_ptr` work the same way, providing automatic and safe resource management.
+
+This design makes pointers disappear from application code, replacing them with higher-level abstractions. The result is simpler, safer, and more maintainable code, while also ensuring strong resource safety: no memory leaks, no forgotten thread joins, and no unclosed files.
+
+
+### 3.3.4 Suppressing Operations
+
+Using the default copy or move operations in a class hierarchy is unsafe. With only a pointer to the base, the compiler has no knowledge of the derived members, so it cannot copy or move them correctly. The usual solution is to delete these operations explicitly:
+
+```cpp
+class Shape {
+public:
+    Shape(const Shape&) = delete;            // no copy
+    Shape& operator=(const Shape&) = delete;
+
+    Shape(Shape&&) = delete;                 // no move
+    Shape& operator=(Shape&&) = delete;
+
+    ~Shape();                                // virtual destructor
+    // ...
+};
+```
+
+With this, any attempt to copy or move a `Shape` will be caught at compile time.
+
+If copying is needed in a hierarchy, the proper approach is to define a virtual `clone()` function that creates a copy of the most-derived type.
+
+In this example, even if you forgot to delete the copy or move, the compiler would not generate a move because a user-declared destructor suppresses it. Copy generation in such cases is also deprecated. This makes it a good practice to explicitly declare a destructor, even if the default one would suffice, since it prevents accidental generation of copy operations.
+
+Base classes in hierarchies are not the only case where copying is problematic. Resource handles generally cannot be copied just by copying their members (e.g. two objects managing the same file handle or thread would be incorrect). The `= delete` mechanism is general-purpose: it lets you suppress any operation you do not want the compiler to generate.
+
+
+## 3.4 Templates
