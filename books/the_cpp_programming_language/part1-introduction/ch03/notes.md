@@ -278,15 +278,15 @@ public:
 
 double& List_container::operator[](int i)
 {
-    for (auto& x : ld) {
-        if (i == 0) return x;
+    for (auto& x : ld) {                                        // List traversal takes linear time
+        if (i == 0) return x;                                   
         --i;
     }
     throw out_of_range("List container");
 }
 ```
 
-Here the representation is a std::list<double>. Subscript access on a list is inefficient, but this example demonstrates how different implementations can still share the same interface.
+Here the representation is a std::list<double>. Subscript access on a list is inefficient (because traversal takes linear time), but this example demonstrates how different implementations can still share the same interface.
 
 ```cpp
 void h()
@@ -296,7 +296,9 @@ void h()
 }
 ```
 
-The function use() works equally with Vector\_container, List\_container, or any other class derived from Container. It relies only on the interface, not the implementation. This flexibility means code doesn’t need recompilation when a new derived class is added, but it also requires objects to be used through references or pointers. Reason for this is abstract types cannot be instantiated directly, so you cannot create a Container object. Instead, you create objects of derived classes and use them through pointers or references to the base class.
+The function use() works equally with Vector\_container, List\_container, or any other class derived from Container. It relies only on the interface, not the implementation. This flexibility means code doesn’t need recompilation when a new derived class is added, but it also requires objects to be used through references or pointers. 
+
+The reason it requires objects to be used through references or pointers is abstract types cannot be instantiated directly, so you cannot create a Container object. Instead, you create objects of derived classes and use them through pointers or references to the base class.
 
 ### 3.2.3 Virtual Functions
 
@@ -325,3 +327,175 @@ This setup allows polymorphic behavior while keeping overhead low. The cost is:
 Runtime performance of a virtual function call is close to that of a regular function call—typically within about 25%.
 
 ### 3.2.4 Class Hierarchies
+
+A class hierarchy is a set of classes related by inheritance. We use it to model “is-a” relationships, such as a fire engine being a kind of truck, or a smiley face being a kind of circle. Real systems often have large, deep hierarchies. As a small example, consider shapes on a screen.
+
+<img src='images/1755933706268.png' width=400>
+
+We first define an abstract base with the common interface. Nothing except the vtable pointer layout is shared across all shapes.
+
+```cpp
+class Shape {
+public:
+    // pure virtual
+    virtual Point center() const = 0;
+    virtual void move(Point to) = 0;
+
+    // draw on current "Canvas"
+    virtual void draw() const = 0;
+    virtual void rotate(int angle) = 0;
+
+    // destructor
+    virtual ~Shape() {}
+    // ...
+};
+```
+
+With that interface, we can write generic algorithms operating on collections of shapes.
+
+```cpp
+void rotate_all(std::vector<Shape*>& v, int angle) {
+    for (auto p : v)
+        p->rotate(angle);
+}
+```
+
+To define a concrete shape, derive from Shape and implement the operations.
+
+```cpp
+class Circle : public Shape {
+public:
+    Circle(Point p, int rr);                // Constructor. rr stands for radius
+    Point center() const { return x; }
+    void move(Point to) { x = to; }
+    void draw() const;
+    void rotate(int) {}  // trivial here
+
+private:
+    Point x;  // center
+    int r;    // radius
+};
+```
+
+We can build further by deriving from Circle.
+
+```cpp
+class Smiley : public Circle {          // use Circle as the base for a face
+public:
+    Smiley(Point p, int r) : Circle{p, r}, mouth{nullptr} {}            // Note: use of brace initialization in the initializer list
+
+    ~Smiley() {
+        delete mouth;
+        for (auto p : eyes) delete p;
+    }
+
+    void move(Point to);
+    void draw() const;
+    void rotate(int);
+
+    void add_eye(Shape* s) { eyes.push_back(s); }
+    void set_mouth(Shape* s);
+    virtual void wink(int i);
+
+private:
+    std::vector<Shape*> eyes;  // usually two eyes
+    Shape* mouth;
+};
+```
+
+Smiley’s draw calls its base and member draws.
+
+```cpp
+void Smiley::draw() {
+    Circle::draw();
+    for (auto p : eyes)
+        p->draw();
+    mouth->draw();
+}
+```
+
+A virtual destructor is essential for an abstract base because derived objects are often deleted via a base pointer. The virtual call ensures the most-derived destructor runs, which then destroys bases and members.
+
+Derived classes can add data and behavior. This flexibility is powerful but easy to misuse. Interface inheritance lets derived objects stand in for base objects. Implementation inheritance lets derived classes reuse base code, such as Circle’s constructor or draw.
+
+For small, concrete types we often allocate on the stack and copy freely. In hierarchies, we usually allocate on the free store and access via pointers or references. Here is a reader that constructs shapes from a stream and returns base pointers.
+
+```cpp
+enum class Kind { circle, triangle, smiley };
+
+Shape* read_shape(std::istream& is) {
+    // ... read shape header from is and determine k ...
+    Kind k = /* ... */;
+
+    switch (k) {
+    case Kind::circle: {
+        // read {Point,int} into p and r
+        Point p; int r;
+        // ...
+        return new Circle{p, r};
+    }
+    case Kind::triangle: {
+        // read {Point,Point,Point} into p1, p2, p3
+        Point p1, p2, p3;
+        // ...
+        return new Triangle{p1, p2, p3};
+    }
+    case Kind::smiley: {
+        // read {Point,int,Shape,Shape,Shape} into p, r, e1, e2, m
+        Point p; int r; Shape* e1; Shape* e2; Shape* m;
+        // ...
+        Smiley* ps = new Smiley{p, r};
+        ps->add_eye(e1);
+        ps->add_eye(e2);
+        ps->set_mouth(m);
+        return ps;
+    }
+    }
+    return nullptr;
+}
+```
+
+Client code need not know the concrete types.
+
+```cpp
+void user() {
+    std::vector<Shape*> v;
+    while (std::cin)
+        v.push_back(read_shape(std::cin));
+
+    draw_all(v);
+    rotate_all(v, 45);
+
+    for (auto p : v) delete p;  // must delete elements
+}
+```
+
+Raw owning pointers are error-prone. Callers might forget to delete returned objects, and containers of pointers might leak. Prefer unique ownership with unique\_ptr.
+
+```cpp
+std::unique_ptr<Shape> read_shape(std::istream& is) {
+    // ... read shape header and determine k ...
+    Kind k = /* ... */;
+
+    switch (k) {
+    case Kind::circle: {
+        Point p; int r;
+        // ...
+        return std::unique_ptr<Shape>{new Circle{p, r}};            // Unique ptr as opposed to a raw pointer, e.g. Circle*
+    }
+    // handle other kinds similarly
+    }
+    return nullptr;
+}
+
+void user() {
+    std::vector<std::unique_ptr<Shape>> v;
+    while (std::cin)
+        v.push_back(read_shape(std::cin));
+
+    draw_all(v);
+    rotate_all(v);
+}  // shapes are destroyed automatically
+```
+
+With unique\_ptr, ownership is explicit and objects are destroyed when their owners go out of scope. To use vectors of unique\_ptr, provide overloads of the generic functions that accept them. Writing many such helpers can be tedious; see §3.4.3 for alternatives.
