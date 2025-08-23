@@ -9,6 +9,9 @@
   - [3.2.2 Abstract Types](#322-abstract-types)
   - [3.2.3 Virtual Functions](#323-virtual-functions)
   - [3.2.4 Class Hierarchies](#324-class-hierarchies)
+- [3.3 Copy and Move](#33-copy-and-move)
+  - [3.3.1 Copying Containers](#331-copying-containers)
+  - [3.3.2 Moving Containers](#332-moving-containers)
 
 ## 3.1 Introduction
 
@@ -499,3 +502,170 @@ void user() {
 ```
 
 With unique\_ptr, ownership is explicit and objects are destroyed when their owners go out of scope. To use vectors of unique\_ptr, provide overloads of the generic functions that accept them. Writing many such helpers can be tedious; see §3.4.3 for alternatives.
+
+## 3.3 Copy and Move
+
+By default, objects can be copied, including both built-in and user-defined types. The default copy operation is memberwise: each member is copied in turn.
+
+```cpp
+void test(complex z1)
+{
+    complex z2 {z1};    // copy initialization
+    complex z3;
+    z3 = z2;            // copy assignment
+    // ...
+}
+```
+
+Here, `z1`, `z2`, and `z3` all end up with the same value because both initialization and assignment copy every member.
+
+When designing a class, we must decide whether copying should be allowed and what it should mean. For simple concrete types, memberwise copy is often correct. For more complex types like `Vector`, it usually isn’t. For abstract types, memberwise copy is almost never appropriate.
+
+### 3.3.1 Copying Containers
+
+When a class manages a resource through a pointer, the default memberwise copy is usually wrong. It breaks the class invariant because both objects end up referring to the same resource.
+
+```cpp
+void bad_copy(Vector& v1)
+{
+    Vector v2 = v1;    // memberwise copy
+    v1[0] = 2;         // v2[0] also becomes 2
+    v2[1] = 3;         // v1[1] also becomes 3
+}
+```
+
+If `v1` has four elements, both `v1` and `v2` now share the same array. When one modifies the array, the other changes too. Worse, when both destructors run, they will each try to free the same memory.
+
+<img src='images/1755935409068.png' width=500>
+
+The presence of a destructor is a strong signal that the default copy is unsafe. Instead, we must define proper copy semantics using a copy constructor and copy assignment operator.
+
+```cpp
+class Vector {
+private:
+    double* elem;       // points to an array of sz doubles
+    int sz;
+
+public:
+    Vector(int s);                           // constructor
+    ~Vector() { delete[] elem; }             // destructor
+
+    Vector(const Vector& a);                 // copy constructor
+    Vector& operator=(const Vector& a);      // copy assignment
+
+    double& operator[](int i);
+    const double& operator[](int i) const;
+    int size() const;
+};
+```
+
+The copy constructor allocates new space and copies elements so that each `Vector` owns its own array.
+
+```cpp
+Vector::Vector(const Vector& a)
+    : elem{new double[a.sz]}, sz{a.sz}
+{
+    for (int i = 0; i != sz; ++i)
+        elem[i] = a.elem[i];
+}
+```
+Copy assignment follows the same idea: allocate new space, copy elements, release old space, then update the object.
+
+```cpp
+Vector& Vector::operator=(const Vector& a)
+{
+    double* p = new double[a.sz];
+    for (int i = 0; i != a.sz; ++i)
+        p[i] = a.elem[i];
+
+    delete[] elem;    // free old memory
+    elem = p;
+    sz = a.sz;
+    return *this;
+}
+```
+
+Inside member functions, `this` is a pointer to the object being operated on. Both the copy constructor and copy assignment take their argument as `const X&` to avoid unnecessary copying and to prevent modification of the source.
+
+The result of `v2=v1`:
+
+<img src='images/1755935946423.png' width=500>
+
+### 3.3.2 Moving Containers
+
+Copying large objects can be expensive, so C++ provides move semantics to avoid unnecessary copies.
+
+Consider `operator+` for `Vector`:
+
+```cpp
+Vector operator+(const Vector& a, const Vector& b)
+{
+    if (a.size() != b.size())
+        throw Vector_size_mismatch{};
+
+    Vector res(a.size());
+    for (int i = 0; i != a.size(); ++i)
+        res[i] = a[i] + b[i];
+
+    return res;   // local result is returned
+}
+```
+
+Here, `res` is copied when returned. If we write:
+
+```cpp
+void f(const Vector& x, const Vector& y, const Vector& z)
+{
+    Vector r;
+    r = x + y + z;
+}
+```
+
+then at least two `Vector` copies occur. For large vectors (e.g. 10,000 doubles), this is wasteful—especially since `res` is discarded after being copied.
+
+The solution is to allow *moves* instead of *copies*. We declare a move constructor and move assignment in addition to the copy versions:
+
+```cpp
+class Vector {
+    // ...
+    Vector(const Vector& a);            // copy constructor
+    Vector& operator=(const Vector& a); // copy assignment
+
+    Vector(Vector&& a);                 // move constructor
+    Vector& operator=(Vector&& a);      // move assignment
+};
+```
+
+The move constructor simply transfers ownership of the resource:
+
+```cpp
+Vector::Vector(Vector&& a)
+    : elem{a.elem}, sz{a.sz}
+{
+    a.elem = nullptr;   // leave source empty
+    a.sz = 0;
+}
+```
+
+Here, `&&` denotes an *rvalue reference*, which can bind to temporary objects. That allows us to “steal” the resource from objects that won’t be used again. In `operator+`, the local `res` is such a temporary, so returning it triggers a move rather than a copy.
+
+A move constructor must not take a `const` argument because it modifies the source (by emptying it). Move assignment is defined in the same style: release the old resource, steal from the source, and leave the source in a safe, destructible state.
+
+We can also explicitly request a move using `std::move`:
+
+```cpp
+Vector f()
+{
+    Vector x(1000);
+    Vector y(1000);
+    Vector z(1000);
+
+    z = x;              // copy
+    y = std::move(x);   // move
+
+    return z;           // move
+}
+```
+
+`std::move` converts its argument into an rvalue reference, signaling that it can be safely moved from. After a move, the source object is empty but valid, so its destructor can run normally and it can even be reassigned later.
+
